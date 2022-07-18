@@ -106,8 +106,9 @@ function displayCounter(x) {
 function setSign(x) {
 
   sign = x;
-  firstNumber=secondNumber;
-  secondNumber='0';
+  if(firstNumber=='0')
+  {firstNumber=secondNumber;
+  secondNumber='0';}
 
 }
 
@@ -115,6 +116,8 @@ function setSign(x) {
 function equal() {
   removeHighlight();
   operation(sign);
+  sign='';
+  secondNumber='0'
 
 }
 
@@ -129,31 +132,44 @@ function operation(sign) {
       break;
     
     case '-':
-      console.log(10);
+      firstNumber = +(parseFloat(firstNumber) - parseFloat(secondNumber)).toFixed(10);
+    firstNumber=String(firstNumber);
+    console.log(firstNumber);
       break;
       
     case '*':
-      console.log(20);
+      firstNumber = +(parseFloat(firstNumber) * parseFloat(secondNumber)).toFixed(10);
+    firstNumber=String(firstNumber);
+    console.log(firstNumber);
       break;
 
     case '/':
-      console.log(30);
+      firstNumber = +(parseFloat(firstNumber) / parseFloat(secondNumber)).toFixed(10);
+    firstNumber=String(firstNumber);
+    console.log(firstNumber);
       break;
 
 
   }
 
-displayCounter(firstNumber);
-
+  check(firstNumber)
+    
+    
 }
 
 
 function check(number){
 
   switch(true){
+    case (numberCount(number) >= 10):
+      firstNumber='ERROR'
+      break;
+
 
   }
 
+
+  displayCounter(firstNumber);
 }
 
 
