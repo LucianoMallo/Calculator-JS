@@ -64,6 +64,14 @@ function changeSign(){
 
 }
 
+
+function setSign(x){
+
+sign=x;
+console.log(sign);
+
+}
+
 function setHighlight(x){
 
     removeHighlight();
@@ -98,9 +106,13 @@ function displayCounter(x){
 
 function equal(){
     removeHighlight();
+    operation(sign);
 
 }
 
+function operation(){
+
+}
 
 
 
