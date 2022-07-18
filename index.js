@@ -5,24 +5,25 @@ let sign = '';
 
 
 
+
 function addNumber(number) {
 
   switch (true) {
 
-    case (numberCount(firstNumber) >= 10):
+    case (numberCount(secondNumber) >= 10):
       break;
 
-    case (firstNumber == '0'):
-      firstNumber = number;
+    case (secondNumber == '0'):
+      secondNumber = number;
       break;
 
     default:
-      firstNumber += number;
+      secondNumber += number;
       break;
 
   }
 
-  displayCounter(firstNumber);
+  displayCounter(secondNumber);
 
 }
 
@@ -31,51 +32,50 @@ function addComma() {
 
   switch (true) {
 
-    case (firstNumber.includes('.')):
-    case (numberCount(firstNumber) >= 10):
+    case (secondNumber.includes('.')):
+    case (numberCount(secondNumber) >= 10):
       break;
 
-    case (firstNumber == '0'):
-      firstNumber = '0.';
+    case (secondNumber == '0'):
+      secondNumber = '0.';
       break;
 
     default:
-      firstNumber += '.';
+      secondNumber += '.';
       break;
   }
 
-  displayCounter(firstNumber);
+  displayCounter(secondNumber);
 }
 
-function changeSign() {
+
+
+function negate() {
   switch (true) {
 
-    case (firstNumber == '0'):
-    case (firstNumber == '0.'):
+    case (secondNumber == '0'):
+    case (secondNumber == '0.'):
       break;
 
     default:
 
-      firstNumber = String(firstNumber * (-1));
+      secondNumber = String(secondNumber * (-1));
       break;
 
   }
-  displayCounter(firstNumber);
+  displayCounter(secondNumber);
 
 }
 
 
-function setSign(x) {
 
-  sign = x;
-
-}
 
 function setHighlight(x) {
 
-  removeHighlight();
-  let changeClass = x.currentTarget.classList
-  changeClass.add("operatorHighlighted");
+  removeHighlight(); 
+
+      let changeClass = x.currentTarget.classList
+      changeClass.add("operatorHighlighted");
 
 }
 
@@ -84,6 +84,7 @@ function removeHighlight() {
   for (let i = 0; i < changeClass.length; i++) {
     changeClass[i].classList.remove('operatorHighlighted')
   }
+  
 }
 
 function eraseValue() {
@@ -97,10 +98,19 @@ function eraseValue() {
 }
 
 function displayCounter(x) {
-  
+
   document.getElementById('Result_Screen').value = x.replace(".", ",");
 
 }
+
+function setSign(x) {
+
+  sign = x;
+  firstNumber=secondNumber;
+  secondNumber='0';
+
+}
+
 
 function equal() {
   removeHighlight();
@@ -112,28 +122,39 @@ function operation(sign) {
 
   switch (sign) {
     case '+':
-    console.log(10);
+      
+    firstNumber = +(parseFloat(firstNumber) + parseFloat(secondNumber)).toFixed(10);
+    firstNumber=String(firstNumber);
+    console.log(firstNumber);
       break;
     
     case '-':
-
+      console.log(10);
       break;
-
+      
     case '*':
-
+      console.log(20);
       break;
 
     case '/':
-
+      console.log(30);
       break;
 
 
   }
 
+displayCounter(firstNumber);
+
 }
 
 
+function check(number){
 
+  switch(true){
+
+  }
+
+}
 
 
 
