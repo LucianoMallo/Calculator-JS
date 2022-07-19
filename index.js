@@ -1,5 +1,5 @@
-let firstNumber = '0';
-let secondNumber = '0';
+let firstNumber = '';
+let secondNumber = '';
 let sign = '';
 
 
@@ -10,9 +10,12 @@ function addNumber(number) {
 
   switch (true) {
 
+
+    case secondNumber=='ERROR':
     case (numberCount(secondNumber) >= 10):
       break;
 
+    case (secondNumber == ''):
     case (secondNumber == '0'):
       secondNumber = number;
       break;
@@ -32,13 +35,13 @@ function addComma() {
 
   switch (true) {
 
+    case secondNumber=='ERROR':
     case (secondNumber.includes('.')):
     case (numberCount(secondNumber) >= 10):
       break;
 
-    case (secondNumber == '0'):
-      secondNumber = '0.';
-      break;
+    case (secondNumber == ''):
+      secondNumber = '0';
 
     default:
       secondNumber += '.';
@@ -51,18 +54,34 @@ function addComma() {
 
 
 function negate() {
+
+
   switch (true) {
 
+    case secondNumber=='ERROR':
     case (secondNumber == '0'):
     case (secondNumber == '0.'):
       break;
 
-    default:
+    case (secondNumber == ''): //If that permits to negate the result of a operation to continue calculating
+        /*if (document.getElementById('Result_Screen').value != '') {
+        secondNumber =document.getElementById('Result_Screen').value.replace("," , ".");
+        console.log(secondNumber);
+        negate();
+      }*/
+      break;
 
+    case (secondNumber.charAt(secondNumber.length-1) == '.'):
+      secondNumber = String(secondNumber * (-1));
+      secondNumber += '.'
+      break;
+
+    default:
       secondNumber = String(secondNumber * (-1));
       break;
 
   }
+
   displayCounter(secondNumber);
 
 }
@@ -89,11 +108,11 @@ function removeHighlight() {
 
 function eraseValue() {
 
-  document.getElementById('Result_Screen').value = "";
+  document.getElementById('Result_Screen').value = '';
   removeHighlight();
-  firstNumber = "0";
-  secondNumber = "0";
-  sign = "";
+  firstNumber = '';
+  secondNumber = '';
+  sign = '';
 
 }
 
@@ -104,11 +123,40 @@ function displayCounter(x) {
 }
 
 function setSign(x) {
+  
+switch(true){
 
-  sign = x;
-  if(firstNumber=='0')
-  {firstNumber=secondNumber;
-  secondNumber='0';}
+  
+case(firstNumber=='ERROR'):
+  break; 
+
+case(firstNumber =='' && secondNumber==''):
+  sign=x;
+
+  firstNumber=String(document.getElementById('Result_Screen').value); //Cambiar en el futuro jaja, si veo el futuro...
+  secondNumber='';
+  break;
+
+case(firstNumber!='' && secondNumber==''):
+  sign=x;
+  secondNumber='';
+  break;
+
+case (firstNumber!=''&& secondNumber!=''):
+  operation(sign);
+  displayCounter(firstNumber);
+  sign=x;
+  secondNumber='';
+  break;
+
+case (firstNumber == '' && secondNumber!=''):
+  firstNumber=secondNumber;
+  secondNumber='';
+  sign=x;
+  break;
+
+}
+
 
 }
 
@@ -116,45 +164,49 @@ function setSign(x) {
 function equal() {
   removeHighlight();
   operation(sign);
+  displayCounter(firstNumber);
   sign='';
-  secondNumber='0'
+  secondNumber='';
+  firstNumber='';
 
 }
 
 function operation(sign) {
 
   switch (sign) {
-    case '+':
-      
+
+    case '+':  
     firstNumber = +(parseFloat(firstNumber) + parseFloat(secondNumber)).toFixed(10);
     firstNumber=String(firstNumber);
-    console.log(firstNumber);
+    
       break;
     
     case '-':
       firstNumber = +(parseFloat(firstNumber) - parseFloat(secondNumber)).toFixed(10);
     firstNumber=String(firstNumber);
-    console.log(firstNumber);
+   
       break;
       
     case '*':
       firstNumber = +(parseFloat(firstNumber) * parseFloat(secondNumber)).toFixed(10);
     firstNumber=String(firstNumber);
-    console.log(firstNumber);
+    
       break;
 
     case '/':
       firstNumber = +(parseFloat(firstNumber) / parseFloat(secondNumber)).toFixed(10);
     firstNumber=String(firstNumber);
-    console.log(firstNumber);
+    
       break;
 
+    default:
+        break;
 
   }
 
   check(firstNumber)
     
-    
+
 }
 
 
@@ -165,11 +217,12 @@ function check(number){
       firstNumber='ERROR'
       break;
 
-
+    default:
+        break;
   }
 
 
-  displayCounter(firstNumber);
+  
 }
 
 
@@ -186,33 +239,31 @@ window.addEventListener("keydown", function (event) {
 
 
     case ",":
-      console.log(50);
-      setHighlight(",");
+      setHighlight(event);
 
       break;
 
     case "+":
-      console.log(10);
       // code for "add" key press.
+      setHighlight(event);
       break;
 
     case "-":
-      console.log(20);
+      setHighlight(event);
       // code for "subtract" key press.
       break;
 
     case "*":
-      console.log(30);
+      setHighlight(event);
       // code for "multiply" key press.
       break;
 
     case "/":
-      console.log(40);
+      setHighlight(event);
       // code for "divide" key press.
       break;
 
     case (parseInt(event.key) >= 0 && parseInt(event.key) <= 10):
-      console.log(60);
 
       break;
 
@@ -226,3 +277,29 @@ window.addEventListener("keydown", function (event) {
 }, true);
   // the last option dispatches the event to the listener first,
   // then dispatches event to window
+
+
+function blockButtons(){
+
+  //unlockButtons();
+  console.log('Entra');
+
+  elements = document.getElementsByTagName("button")
+  elements.forEach(element => {
+    if(element.classList.includes("cButton")){
+      return;}
+    
+    else{
+      document.element.classList.add("blockButtons");
+      changeClass.add("blockButtons");
+    }
+  
+});
+
+}
+
+
+function  unlockButtons(){
+
+
+}

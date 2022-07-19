@@ -5,6 +5,7 @@
     --color4: black;
     --color5: lightgreen;
     --color6: #858484;
+    --color7: #8003d3;
     --font1: 'Roboto',sans-serif;
     --font2: 'Playfair Display', serif;
 
@@ -132,7 +133,15 @@
 
     .operatorHighlighted{
 
-    background-color: #8003d3;
+    background-color:var(--color7);
+
+    }
+
+
+    .blockButtons{
+
+    background-color: #858484;
+    cursor: not-allowed;
 
     }
 
