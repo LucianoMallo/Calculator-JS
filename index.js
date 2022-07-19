@@ -11,11 +11,12 @@ function addNumber(number) {
   switch (true) {
 
 
-    case secondNumber=='ERROR':
+
+    case (firstNumber == 'ERROR'):
     case (numberCount(secondNumber) >= 10):
       break;
 
-    case (secondNumber == ''):
+    case (secondNumber == '' && firstNumber != 'ERROR'):
     case (secondNumber == '0'):
       secondNumber = number;
       break;
@@ -35,7 +36,7 @@ function addComma() {
 
   switch (true) {
 
-    case secondNumber=='ERROR':
+    case secondNumber == 'ERROR':
     case (secondNumber.includes('.')):
     case (numberCount(secondNumber) >= 10):
       break;
@@ -58,20 +59,20 @@ function negate() {
 
   switch (true) {
 
-    case secondNumber=='ERROR':
+    case secondNumber == 'ERROR':
     case (secondNumber == '0'):
     case (secondNumber == '0.'):
       break;
 
     case (secondNumber == ''): //If that permits to negate the result of a operation to continue calculating
-        /*if (document.getElementById('Result_Screen').value != '') {
-        secondNumber =document.getElementById('Result_Screen').value.replace("," , ".");
-        console.log(secondNumber);
-        negate();
-      }*/
+      /*if (document.getElementById('Result_Screen').value != '') {
+      secondNumber =document.getElementById('Result_Screen').value.replace("," , ".");
+      console.log(secondNumber);
+      negate();
+    }*/
       break;
 
-    case (secondNumber.charAt(secondNumber.length-1) == '.'):
+    case (secondNumber.charAt(secondNumber.length - 1) == '.'):
       secondNumber = String(secondNumber * (-1));
       secondNumber += '.'
       break;
@@ -91,10 +92,10 @@ function negate() {
 
 function setHighlight(x) {
 
-  removeHighlight(); 
+  removeHighlight();
 
-      let changeClass = x.currentTarget.classList
-      changeClass.add("operatorHighlighted");
+  let changeClass = x.currentTarget.classList
+  changeClass.add("operatorHighlighted");
 
 }
 
@@ -103,13 +104,14 @@ function removeHighlight() {
   for (let i = 0; i < changeClass.length; i++) {
     changeClass[i].classList.remove('operatorHighlighted')
   }
-  
+
 }
 
 function eraseValue() {
 
   document.getElementById('Result_Screen').value = '';
   removeHighlight();
+  unlockButtons();
   firstNumber = '';
   secondNumber = '';
   sign = '';
@@ -123,39 +125,39 @@ function displayCounter(x) {
 }
 
 function setSign(x) {
-  
-switch(true){
 
-  
-case(firstNumber=='ERROR'):
-  break; 
+  switch (true) {
 
-case(firstNumber =='' && secondNumber==''):
-  sign=x;
 
-  firstNumber=String(document.getElementById('Result_Screen').value); //Cambiar en el futuro jaja, si veo el futuro...
-  secondNumber='';
-  break;
+    case (firstNumber == 'ERROR'):
+      break;
 
-case(firstNumber!='' && secondNumber==''):
-  sign=x;
-  secondNumber='';
-  break;
+    case (firstNumber == '' && secondNumber == ''):
+      sign = x;
 
-case (firstNumber!=''&& secondNumber!=''):
-  operation(sign);
-  displayCounter(firstNumber);
-  sign=x;
-  secondNumber='';
-  break;
+      firstNumber = String(document.getElementById('Result_Screen').value); //Cambiar en el futuro jaja, si veo el futuro...
+      secondNumber = '';
+      break;
 
-case (firstNumber == '' && secondNumber!=''):
-  firstNumber=secondNumber;
-  secondNumber='';
-  sign=x;
-  break;
+    case (firstNumber != '' && secondNumber == ''):
+      sign = x;
+      secondNumber = '';
+      break;
 
-}
+    case (firstNumber != '' && secondNumber != ''):
+      operation(sign);
+      displayCounter(firstNumber);
+      sign = x;
+      secondNumber = '';
+      break;
+
+    case (firstNumber == '' && secondNumber != ''):
+      firstNumber = secondNumber;
+      secondNumber = '';
+      sign = x;
+      break;
+
+  }
 
 
 }
@@ -165,9 +167,16 @@ function equal() {
   removeHighlight();
   operation(sign);
   displayCounter(firstNumber);
-  sign='';
-  secondNumber='';
-  firstNumber='';
+
+  if (firstNumber != 'ERROR') {
+    sign = '';
+    secondNumber = '';
+    firstNumber = '';
+  }
+
+console.log(firstNumber);
+console.log(secondNumber);
+console.log(si);
 
 }
 
@@ -175,54 +184,55 @@ function operation(sign) {
 
   switch (sign) {
 
-    case '+':  
-    firstNumber = +(parseFloat(firstNumber) + parseFloat(secondNumber)).toFixed(10);
-    firstNumber=String(firstNumber);
-    
+    case '+':
+      firstNumber = +(parseFloat(firstNumber) + parseFloat(secondNumber)).toFixed(10);
+      firstNumber = String(firstNumber);
+
       break;
-    
+
     case '-':
       firstNumber = +(parseFloat(firstNumber) - parseFloat(secondNumber)).toFixed(10);
-    firstNumber=String(firstNumber);
-   
+      firstNumber = String(firstNumber);
+
       break;
-      
+
     case '*':
       firstNumber = +(parseFloat(firstNumber) * parseFloat(secondNumber)).toFixed(10);
-    firstNumber=String(firstNumber);
-    
+      firstNumber = String(firstNumber);
+
       break;
 
     case '/':
       firstNumber = +(parseFloat(firstNumber) / parseFloat(secondNumber)).toFixed(10);
-    firstNumber=String(firstNumber);
-    
+      firstNumber = String(firstNumber);
+
       break;
 
     default:
-        break;
+      break;
 
   }
 
   check(firstNumber)
-    
+
 
 }
 
 
-function check(number){
+function check(number) {
 
-  switch(true){
+  switch (true) {
     case (numberCount(number) >= 10):
-      firstNumber='ERROR'
+      firstNumber = 'ERROR'
+      blockButtons();
       break;
 
     default:
-        break;
+      break;
   }
 
 
-  
+
 }
 
 
@@ -275,31 +285,38 @@ window.addEventListener("keydown", function (event) {
   // Cancel the default action to avoid it being handled twice
   event.preventDefault();
 }, true);
-  // the last option dispatches the event to the listener first,
-  // then dispatches event to window
+// the last option dispatches the event to the listener first,
+// then dispatches event to window
 
 
-function blockButtons(){
+function blockButtons() {
 
-  //unlockButtons();
+  unlockButtons();
+
   console.log('Entra');
 
-  elements = document.getElementsByTagName("button")
-  elements.forEach(element => {
-    if(element.classList.includes("cButton")){
-      return;}
-    
-    else{
-      document.element.classList.add("blockButtons");
-      changeClass.add("blockButtons");
+  const buttons = document.querySelectorAll('button');
+  //const elements = document.getElementsByTagName("button");
+
+  buttons.forEach(function (element) {
+
+
+    if (!element.classList.contains("cButton")) {
+
+      element.classList.add("blockButtons");
+
     }
-  
-});
+
+  });
 
 }
 
 
-function  unlockButtons(){
+function unlockButtons() {
 
+  let changeClass = document.querySelectorAll('button');
+  for (let i = 0; i < changeClass.length; i++) {
+    changeClass[i].classList.remove('blockButtons')
+  }
 
 }
