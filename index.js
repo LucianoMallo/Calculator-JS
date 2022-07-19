@@ -8,9 +8,8 @@ let sign = '';
 
 function addNumber(number) {
 
+
   switch (true) {
-
-
 
     case (firstNumber == 'ERROR'):
     case (numberCount(secondNumber) >= 10):
@@ -26,8 +25,10 @@ function addNumber(number) {
       break;
 
   }
+  if (firstNumber != 'ERROR') {
 
-  displayCounter(secondNumber);
+    displayCounter(secondNumber);
+  }
 
 }
 
@@ -49,7 +50,10 @@ function addComma() {
       break;
   }
 
-  displayCounter(secondNumber);
+  if (firstNumber != 'ERROR') {
+
+    displayCounter(secondNumber);
+  }
 }
 
 
@@ -59,7 +63,7 @@ function negate() {
 
   switch (true) {
 
-    case secondNumber == 'ERROR':
+    case firstNumber == 'ERROR':
     case (secondNumber == '0'):
     case (secondNumber == '0.'):
       break;
@@ -83,7 +87,10 @@ function negate() {
 
   }
 
-  displayCounter(secondNumber);
+  if (firstNumber != 'ERROR') {
+
+    displayCounter(secondNumber);
+  }
 
 }
 
@@ -91,11 +98,8 @@ function negate() {
 
 
 function setHighlight(x) {
-
   removeHighlight();
-
-  let changeClass = x.currentTarget.classList
-  changeClass.add("operatorHighlighted");
+  x.classList.add("operatorHighlighted");
 
 }
 
@@ -126,6 +130,7 @@ function displayCounter(x) {
 
 function setSign(x) {
 
+
   switch (true) {
 
 
@@ -134,9 +139,10 @@ function setSign(x) {
 
     case (firstNumber == '' && secondNumber == ''):
       sign = x;
-
-      firstNumber = String(document.getElementById('Result_Screen').value); //Cambiar en el futuro jaja, si veo el futuro...
-      secondNumber = '';
+      firstNumber = String(document.getElementById('Result_Screen').value.replace(',', '.')); //Cambiar en el futuro jaja, si veo el futuro...
+      if (firstNumber == '') {
+        firstNumber = '0';
+      }
       break;
 
     case (firstNumber != '' && secondNumber == ''):
@@ -152,6 +158,7 @@ function setSign(x) {
       break;
 
     case (firstNumber == '' && secondNumber != ''):
+      operation(sign);
       firstNumber = secondNumber;
       secondNumber = '';
       sign = x;
@@ -164,8 +171,14 @@ function setSign(x) {
 
 
 function equal() {
+
+
   removeHighlight();
-  operation(sign);
+
+  if (firstNumber != 'ERROR') {
+    operation(sign);
+  }
+
   displayCounter(firstNumber);
 
   if (firstNumber != 'ERROR') {
@@ -173,10 +186,6 @@ function equal() {
     secondNumber = '';
     firstNumber = '';
   }
-
-console.log(firstNumber);
-console.log(secondNumber);
-console.log(si);
 
 }
 
@@ -222,12 +231,13 @@ function operation(sign) {
 function check(number) {
 
   switch (true) {
-    case (numberCount(number) >= 10):
+    case (numberCount(number) > 10):
       firstNumber = 'ERROR'
       blockButtons();
       break;
 
     default:
+
       break;
   }
 
@@ -244,37 +254,38 @@ function numberCount(numbers) {
 
 window.addEventListener("keydown", function (event) {
 
-  //console.log(event.key);
-  switch (event.key) {
+  const name = event.key;
 
+  //event.preventDefault();
 
-    case ",":
-      setHighlight(event);
+  switch (true) {
 
+    case ['+', '-', '/', '*'].includes(name):
+      document.querySelectorAll('button').forEach((i) => {
+        if (i.value == name) {
+          setHighlight(i);
+        }
+      });
+      setSign(name);
       break;
 
-    case "+":
-      // code for "add" key press.
-      setHighlight(event);
+    case ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].includes(name):
+      addNumber(name);
       break;
 
-    case "-":
-      setHighlight(event);
-      // code for "subtract" key press.
+    case ['Enter'].includes(name):
+      equal();
       break;
 
-    case "*":
-      setHighlight(event);
-      // code for "multiply" key press.
+    case ['Escape'].includes(name):
+      eraseValue();
       break;
-
-    case "/":
-      setHighlight(event);
-      // code for "divide" key press.
+    
+    case [',','.'].includes(name):
+      addComma();
       break;
-
-    case (parseInt(event.key) >= 0 && parseInt(event.key) <= 10):
-
+    case ['Control'].includes(name):
+      negate();
       break;
 
 
@@ -283,7 +294,7 @@ window.addEventListener("keydown", function (event) {
   }
 
   // Cancel the default action to avoid it being handled twice
-  event.preventDefault();
+
 }, true);
 // the last option dispatches the event to the listener first,
 // then dispatches event to window
@@ -292,13 +303,10 @@ window.addEventListener("keydown", function (event) {
 function blockButtons() {
 
   unlockButtons();
-
-  console.log('Entra');
-
   const buttons = document.querySelectorAll('button');
   //const elements = document.getElementsByTagName("button");
 
-  buttons.forEach(function (element) {
+  buttons.forEach(element => {
 
 
     if (!element.classList.contains("cButton")) {
