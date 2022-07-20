@@ -4,14 +4,14 @@ let sign = '';
 
 function addNumber(number) {
 
-
   switch (true) {
 
     case (firstNumber == 'ERROR'):
+    case (document.getElementById('Result_Screen').value == 'ERROR'):
     case (numberCount(secondNumber) >= 10):
       break;
 
-    case (secondNumber == '' && firstNumber != 'ERROR'):
+    case (secondNumber == '' ):
     case (secondNumber == '0'):
       secondNumber = number;
       break;
@@ -21,7 +21,7 @@ function addNumber(number) {
       break;
 
   }
-  if (firstNumber != 'ERROR') {
+  if (document.getElementById('Result_Screen').value != 'ERROR') {
 
     displayCounter(secondNumber);
   }
@@ -45,7 +45,7 @@ function addComma() {
       break;
   }
 
-  if (firstNumber != 'ERROR') {
+  if (document.getElementById('Result_Screen').value != 'ERROR') {
 
     displayCounter(secondNumber);
   }
@@ -56,7 +56,7 @@ function negate() {
 
   switch (true) {
 
-    case firstNumber == 'ERROR':
+    case (document.getElementById('Result_Screen').value == 'ERROR'):
     case (secondNumber == '0'):
     case (secondNumber == '0.'):
       break;
@@ -65,7 +65,7 @@ function negate() {
       /*if (document.getElementById('Result_Screen').value != '') {
       secondNumber =document.getElementById('Result_Screen').value.replace("," , ".");
       negate();
-    }*/
+      }*/
       break;
 
     case (secondNumber.charAt(secondNumber.length - 1) == '.'):
@@ -79,7 +79,7 @@ function negate() {
 
   }
 
-  if (firstNumber != 'ERROR') {
+  if (document.getElementById('Result_Screen').value != 'ERROR') {
 
     displayCounter(secondNumber);
   }
@@ -129,8 +129,8 @@ function setSign(x) {
     case (firstNumber == '' && secondNumber == ''):
       sign = x;
       firstNumber = String(document.getElementById('Result_Screen').value.replace(',', '.'));
-      if(firstNumber == ''){
-        firstNumber='0';
+      if (firstNumber == '') {
+        firstNumber = '0';
       }
       break;
 
@@ -205,6 +205,7 @@ function operation(sign) {
     case '/':
       firstNumber = +(parseFloat(firstNumber) / parseFloat(secondNumber)).toFixed(10);
       firstNumber = String(firstNumber);
+      console.log(firstNumber);
 
       break;
 
@@ -222,13 +223,12 @@ function check(number) {
 
 
   switch (true) {
-    case (numberCount(number) > 10):
+    case (numberCount(number) > 11):
     case (number == 'Infinity' || number == '-Infinity' || number == 'NaN'):
       firstNumber = 'ERROR'
+      secondNumber='';
       blockButtons();
       break;
-
-
 
     default:
 
@@ -282,29 +282,19 @@ window.addEventListener("keydown", function (event) {
       123
 
     default:
-      return; // Quit when this doesn't handle the key event.
+      return;
   }
 
-  // Cancel the default action to avoid it being handled twice
-
 }, true);
-// the last option dispatches the event to the listener first,
-// then dispatches event to window
 
 
-function blockButtons() {
-
+function blockButtons(button) {
   unlockButtons();
   const buttons = document.querySelectorAll('button');
-  //const elements = document.getElementsByTagName("button");
-
   buttons.forEach(element => {
 
-
     if (!element.classList.contains("cButton")) {
-
       element.classList.add("blockButtons");
-
     }
 
   });
