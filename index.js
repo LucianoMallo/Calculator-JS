@@ -2,10 +2,6 @@ let firstNumber = '';
 let secondNumber = '';
 let sign = '';
 
-
-
-
-
 function addNumber(number) {
 
 
@@ -68,7 +64,6 @@ function negate() {
     case (secondNumber == ''): //If that permits to negate the result of a operation to continue calculating
       /*if (document.getElementById('Result_Screen').value != '') {
       secondNumber =document.getElementById('Result_Screen').value.replace("," , ".");
-      console.log(secondNumber);
       negate();
     }*/
       break;
@@ -107,13 +102,13 @@ function removeHighlight() {
 
 function eraseValue() {
 
-  document.getElementById('Result_Screen').value = '';
+
   removeHighlight();
   unlockButtons();
   firstNumber = '';
   secondNumber = '';
   sign = '';
-
+  displayCounter(firstNumber);
 }
 
 function displayCounter(x) {
@@ -134,8 +129,8 @@ function setSign(x) {
     case (firstNumber == '' && secondNumber == ''):
       sign = x;
       firstNumber = String(document.getElementById('Result_Screen').value.replace(',', '.'));
-      if (firstNumber == '') {
-        firstNumber = '0';
+      if(firstNumber == ''){
+        firstNumber='0';
       }
       break;
 
@@ -165,20 +160,23 @@ function setSign(x) {
 
 function equal() {
 
-
   removeHighlight();
 
-  if (firstNumber != 'ERROR') {
-    operation(sign);
+  switch (true) {
+
+    case (firstNumber != 'ERROR' && sign == ''):
+      break;
+
+    case (firstNumber != 'ERROR' && sign != ''):
+      operation(sign);
+      displayCounter(firstNumber);
+      firstNumber = '';
+      secondNumber = '';
+      sign = '';
+      break;
+
   }
 
-  displayCounter(firstNumber);
-
-  if (firstNumber != 'ERROR') {
-    sign = '';
-    secondNumber = '';
-    firstNumber = '';
-  }
 
 }
 
@@ -225,7 +223,7 @@ function check(number) {
 
   switch (true) {
     case (numberCount(number) > 10):
-    case(number=='Infinity'||number=='-Infinity'||number=='NaN'):
+    case (number == 'Infinity' || number == '-Infinity' || number == 'NaN'):
       firstNumber = 'ERROR'
       blockButtons();
       break;
@@ -273,15 +271,15 @@ window.addEventListener("keydown", function (event) {
     case ['Escape'].includes(name):
       eraseValue();
       break;
-    
-    case [',','.'].includes(name):
+
+    case [',', '.'].includes(name):
       addComma();
       break;
 
     case ['Control'].includes(name):
       negate();
       break;
-123
+      123
 
     default:
       return; // Quit when this doesn't handle the key event.
