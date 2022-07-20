@@ -32,7 +32,6 @@ function addNumber(number) {
 
 }
 
-
 function addComma() {
 
   switch (true) {
@@ -55,8 +54,6 @@ function addComma() {
     displayCounter(secondNumber);
   }
 }
-
-
 
 function negate() {
 
@@ -93,9 +90,6 @@ function negate() {
   }
 
 }
-
-
-
 
 function setHighlight(x) {
   removeHighlight();
@@ -139,7 +133,7 @@ function setSign(x) {
 
     case (firstNumber == '' && secondNumber == ''):
       sign = x;
-      firstNumber = String(document.getElementById('Result_Screen').value.replace(',', '.')); //Cambiar en el futuro jaja, si veo el futuro...
+      firstNumber = String(document.getElementById('Result_Screen').value.replace(',', '.'));
       if (firstNumber == '') {
         firstNumber = '0';
       }
@@ -168,7 +162,6 @@ function setSign(x) {
 
 
 }
-
 
 function equal() {
 
@@ -227,14 +220,17 @@ function operation(sign) {
 
 }
 
-
 function check(number) {
+
 
   switch (true) {
     case (numberCount(number) > 10):
+    case(number=='Infinity'||number=='-Infinity'||number=='NaN'):
       firstNumber = 'ERROR'
       blockButtons();
       break;
+
+
 
     default:
 
@@ -245,9 +241,6 @@ function check(number) {
 
 }
 
-
-
-
 function numberCount(numbers) {
   return numbers.replace(/[^0-9]/g, '').length;
 }
@@ -256,7 +249,7 @@ window.addEventListener("keydown", function (event) {
 
   const name = event.key;
 
-  //event.preventDefault();
+  event.preventDefault();
 
   switch (true) {
 
@@ -284,10 +277,11 @@ window.addEventListener("keydown", function (event) {
     case [',','.'].includes(name):
       addComma();
       break;
+
     case ['Control'].includes(name):
       negate();
       break;
-
+123
 
     default:
       return; // Quit when this doesn't handle the key event.
@@ -318,7 +312,6 @@ function blockButtons() {
   });
 
 }
-
 
 function unlockButtons() {
 
