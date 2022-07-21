@@ -11,7 +11,7 @@ function addNumber(number) {
     case (numberCount(secondNumber) >= 10):
       break;
 
-    case (secondNumber == '' ):
+    case (secondNumber == ''):
     case (secondNumber == '0'):
       secondNumber = number;
       break;
@@ -52,13 +52,13 @@ function addComma() {
 }
 
 function negate() {
-
-
+  unlockButtons();
   switch (true) {
 
     case (document.getElementById('Result_Screen').value == 'ERROR'):
-    case (secondNumber == '0'):
-    case (secondNumber == '0.'):
+      break;
+    case (['0', '0.', '', ','].includes(secondNumber)):
+      blockNegButton();
       break;
 
     case (secondNumber == ''): //If that permits to negate the result of a operation to continue calculating
@@ -197,15 +197,15 @@ function operation(sign) {
       break;
 
     case '*':
-      firstNumber = +(parseFloat(firstNumber) * parseFloat(secondNumber)).toFixed(10);
+      firstNumber = +(parseFloat(firstNumber) * parseFloat(secondNumber)).toFixed(9);
       firstNumber = String(firstNumber);
 
       break;
 
     case '/':
-      firstNumber = +(parseFloat(firstNumber) / parseFloat(secondNumber)).toFixed(10);
-      firstNumber = String(firstNumber);
+      firstNumber = +(parseFloat(firstNumber) / parseFloat(secondNumber)).toFixed(9);
       console.log(firstNumber);
+      firstNumber = String(firstNumber);
 
       break;
 
@@ -213,8 +213,12 @@ function operation(sign) {
       break;
 
   }
+  console.log(numberCount(firstNumber));
 
+  firstNumber = toFixed2(firstNumber);
+  console.log(firstNumber);
   check(firstNumber)
+
 
 
 }
@@ -223,15 +227,38 @@ function check(number) {
 
 
   switch (true) {
-    case (numberCount(number) > 11):
-    case (number == 'Infinity' || number == '-Infinity' || number == 'NaN'):
+
+    case (number == 'Infinity' || number == '-Infinity' || number == 'NaN' || number == 'undefined'):
       firstNumber = 'ERROR'
-      secondNumber='';
+      secondNumber = '';
       blockButtons();
       break;
 
-    default:
 
+    case (numberCount(number) > 10):
+      if (number.includes('.')) {
+        while (numberCount(number) > 10 && number.includes('.')) {
+
+          number = number.slice(0, -1);
+
+        }
+        firstNumber = number;
+      }
+
+      if(numberCount(number) > 10){
+        firstNumber = 'ERROR'
+        secondNumber = '';
+        blockButtons();
+        break;
+      }
+
+
+
+      break;
+
+
+
+    default:
       break;
   }
 
@@ -288,7 +315,7 @@ window.addEventListener("keydown", function (event) {
 }, true);
 
 
-function blockButtons(button) {
+function blockButtons() {
   unlockButtons();
   const buttons = document.querySelectorAll('button');
   buttons.forEach(element => {
@@ -301,6 +328,17 @@ function blockButtons(button) {
 
 }
 
+
+function blockNegButton() {
+  unlockButtons();
+
+  const button = document.getElementById('negPos');
+  if (!button.classList.contains("cButton")) {
+    button.classList.add("blockButtons");
+  }
+}
+
+
 function unlockButtons() {
 
   let changeClass = document.querySelectorAll('button');
@@ -308,4 +346,25 @@ function unlockButtons() {
     changeClass[i].classList.remove('blockButtons')
   }
 
+}
+
+
+
+
+function toFixed2(x) {
+  if (Math.abs(x) < 1.0) {
+    var e = parseInt(x.toString().split('e-')[1]);
+    if (e) {
+      x *= Math.pow(10, e - 1);
+      x = '0.' + (new Array(e)).join('0') + x.toString().substring(2);
+    }
+  } else {
+    var e = parseInt(x.toString().split('+')[1]);
+    if (e > 20) {
+      e -= 20;
+      x /= Math.pow(10, e);
+      x += (new Array(e + 1)).join('0');
+    }
+  }
+  return x;
 }

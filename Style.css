@@ -140,7 +140,7 @@
 
     .blockButtons{
 
-    background-color: #858484;
+    background-color: var(--color6);
     cursor: not-allowed;
 
     }
