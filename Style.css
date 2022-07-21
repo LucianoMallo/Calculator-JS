@@ -4,8 +4,9 @@
     --color3: white;
     --color4: black;
     --color5: lightgreen;
-    --color6: #858484;
+    --color6: #0592c6;
     --color7: #8003d3;
+    --color8: #78757a;
     --font1: 'Roboto',sans-serif;
     --font2: 'Playfair Display', serif;
 
@@ -106,7 +107,7 @@
     #C,#negPos{
 
     background-color: var(--color2);
-
+    
     }
 
     #bEq{
@@ -114,6 +115,9 @@
     background-color: var(--color5);
 
     }
+
+    #negPos {opacity: 0.7;
+    transition-duration: 0.2s;}
 
 
     .operationButton {
@@ -124,7 +128,7 @@
 
     }
 
-    .operationButton:hover {
+    #negPos:hover,.operationButton:hover {
 
     opacity: 1.0;
 
@@ -140,9 +144,9 @@
 
     .blockButtons{
 
-    background-color: var(--color6);
+    background-color: var(--color8)!important;
     cursor: not-allowed;
-    opacity: 1;
+    opacity: 1 !important;
 
     }
 
