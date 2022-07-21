@@ -2,6 +2,9 @@ let firstNumber = '';
 let secondNumber = '';
 let sign = '';
 
+
+window.onload = function(){blockNegButton();};
+
 function addNumber(number) {
 
   switch (true) {
@@ -335,7 +338,6 @@ function blockNegButton() {
   }
 
   const button = document.getElementById('negPos');
-  console.log(button);
   if (!button.classList.contains("cButton")) {
     button.classList.add("blockButtons");
   }
