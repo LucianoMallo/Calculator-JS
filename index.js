@@ -3,7 +3,7 @@ let secondNumber = '';
 let sign = '';
 
 
-window.onload = function(){blockNegButton();};
+
 
 function addNumber(number) {
 
@@ -28,7 +28,7 @@ function addNumber(number) {
 
     displayCounter(secondNumber);
   }
-
+  disableButtons();
 }
 
 function addComma() {
@@ -55,26 +55,28 @@ function addComma() {
 }
 
 function negate() {
-
-
-  switch (true) {
+    switch (true) {
 
     case (document.getElementById('Result_Screen').value == 'ERROR'):
+      
       break;
 
     case (firstNumber == '' && secondNumber == '' && document.getElementById('Result_Screen').value != 'ERROR'): //If that permits to negate the result of a operation to continue calculating
-
+      
       if (document.getElementById('Result_Screen').value != '') {
         secondNumber = document.getElementById('Result_Screen').value.replace(",", ".");
         negate();
       }
+      else { blockCeroAndNegButton(); }
       break;
 
     case (['0', '0.', '', ','].includes(secondNumber)):
-      blockNegButton();
+      
+      blockCeroAndNegButton();
       break;
 
     case (secondNumber.charAt(secondNumber.length - 1) == '.'):
+    
       unlockButtons();
       secondNumber = String(secondNumber * (-1));
       secondNumber += '.'
@@ -163,7 +165,7 @@ function setSign(x) {
 
   }
 
-
+  disableButtons();
 }
 
 function equal() {
@@ -221,8 +223,9 @@ function operation(sign) {
 
   }
 
-  firstNumber = toFixed2(firstNumber);
-  check(firstNumber)
+  firstNumber = RevealDecimals(firstNumber);
+  check(firstNumber);
+  console.log(firstNumber);
 }
 
 function check(number) {
@@ -233,29 +236,26 @@ function check(number) {
     case (number == 'Infinity' || number == '-Infinity' || number == 'NaN' || number == 'undefined'):
       firstNumber = 'ERROR'
       secondNumber = '';
-      blockButtons();
+      disableButtons();
       break;
 
 
     case (numberCount(number) > 10):
       if (number.includes('.')) {
-        while (numberCount(number) > 10 && number.includes('.')) {
+         do {
 
           number = number.slice(0, -1);
 
-        }
+        }while (numberCount(number) > 10 && number.includes('.'))
         firstNumber = number;
       }
 
       if (numberCount(number) > 10) {
         firstNumber = 'ERROR'
         secondNumber = '';
-        blockButtons();
+        disableButtons();
         break;
       }
-
-
-
       break;
 
 
@@ -317,7 +317,7 @@ window.addEventListener("keydown", function (event) {
 }, true);
 
 
-function blockButtons() {
+/*function blockAllButtonsExceptC() {
   unlockButtons();
   const buttons = document.querySelectorAll('button');
   buttons.forEach(element => {
@@ -330,17 +330,66 @@ function blockButtons() {
 
 }
 
-
-function blockNegButton() {
-  if (document.getElementById("Result_Screen").value != 'ERROR') {
-
+function blockCeroAndNegButton() {
+  if (document.getElementById("Result_Screen").value != 'ERROR' && document.getElementById("Result_Screen").value != '') {
     unlockButtons();
   }
 
-  const button = document.getElementById('negPos');
-  if (!button.classList.contains("cButton")) {
-    button.classList.add("blockButtons");
+  let negPosbutton = document.getElementById('negPos');
+  if (!negPosbutton.classList.contains("cButton")) {
+    negPosbutton.classList.add("blockButtons");
   }
+  let CeroButton = document.getElementById('b0');
+  if (!CeroButton.classList.contains("cButton")) {
+    CeroButton.classList.add("blockButtons");
+  }
+}
+
+function blockAllNumbersButtons() {
+
+  unlockButtons();
+  const buttons = document.getElementsByClassName('numButton');
+  Array.from(buttons).forEach(element => {
+    element.classList.add("blockButtons");
+  });
+}*/
+
+
+function unableButtons(buttons) {
+  buttons.forEach(element => {element.classList.remove("disable");
+  });
+}
+
+
+function disableButtons() {
+  const allButtons = document.querySelectorAll('button');
+
+    unableButtons(allButtons);
+
+  switch (true) {
+    case ((numberCount(secondNumber)) >= 10):
+      allButtons.forEach(element => {
+        if (element.classList.contains('numButton')) {
+          element.classList.add("disable");
+        }
+      });
+      break;
+
+    case (document.getElementById('Result_Screen').value == 'ERROR'||firstNumber=='ERROR'):
+      allButtons.forEach(element => {
+        element.classList.add("disable");
+      });
+      document.getElementById('C').classList.remove("disable");
+      break;
+
+    case ['0', '0.', '', ','].includes(secondNumber):
+      (document.getElementById('negPos')).classList.add("disable");
+      if (secondNumber != '0.') { (document.getElementById('b0')).classList.add("disable"); }
+      break;
+
+  }
+
+
 }
 
 
@@ -353,10 +402,7 @@ function unlockButtons() {
 
 }
 
-
-
-
-function toFixed2(x) {
+function RevealDecimals(x) {
   if (Math.abs(x) < 1.0) {
     var e = parseInt(x.toString().split('e-')[1]);
     if (e) {
@@ -373,3 +419,6 @@ function toFixed2(x) {
   }
   return x;
 }
+
+
+window.onload = function(){disableButtons();};
