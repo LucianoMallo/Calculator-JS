@@ -52,28 +52,33 @@ function addComma() {
 }
 
 function negate() {
-  unlockButtons();
+
+
   switch (true) {
 
     case (document.getElementById('Result_Screen').value == 'ERROR'):
       break;
+
+    case (firstNumber == '' && secondNumber == '' && document.getElementById('Result_Screen').value != 'ERROR'): //If that permits to negate the result of a operation to continue calculating
+
+      if (document.getElementById('Result_Screen').value != '') {
+        secondNumber = document.getElementById('Result_Screen').value.replace(",", ".");
+        negate();
+      }
+      break;
+
     case (['0', '0.', '', ','].includes(secondNumber)):
       blockNegButton();
       break;
 
-    case (secondNumber == ''): //If that permits to negate the result of a operation to continue calculating
-      /*if (document.getElementById('Result_Screen').value != '') {
-      secondNumber =document.getElementById('Result_Screen').value.replace("," , ".");
-      negate();
-      }*/
-      break;
-
     case (secondNumber.charAt(secondNumber.length - 1) == '.'):
+      unlockButtons();
       secondNumber = String(secondNumber * (-1));
       secondNumber += '.'
       break;
 
     default:
+      unlockButtons();
       secondNumber = String(secondNumber * (-1));
       break;
 
@@ -204,7 +209,6 @@ function operation(sign) {
 
     case '/':
       firstNumber = +(parseFloat(firstNumber) / parseFloat(secondNumber)).toFixed(9);
-      console.log(firstNumber);
       firstNumber = String(firstNumber);
 
       break;
@@ -213,14 +217,9 @@ function operation(sign) {
       break;
 
   }
-  console.log(numberCount(firstNumber));
 
   firstNumber = toFixed2(firstNumber);
-  console.log(firstNumber);
   check(firstNumber)
-
-
-
 }
 
 function check(number) {
@@ -245,7 +244,7 @@ function check(number) {
         firstNumber = number;
       }
 
-      if(numberCount(number) > 10){
+      if (numberCount(number) > 10) {
         firstNumber = 'ERROR'
         secondNumber = '';
         blockButtons();
@@ -330,9 +329,13 @@ function blockButtons() {
 
 
 function blockNegButton() {
-  unlockButtons();
+  if (document.getElementById("Result_Screen").value != 'ERROR') {
+
+    unlockButtons();
+  }
 
   const button = document.getElementById('negPos');
+  console.log(button);
   if (!button.classList.contains("cButton")) {
     button.classList.add("blockButtons");
   }
