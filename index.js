@@ -60,6 +60,7 @@ function negate() {
   switch (true) {
 
     case (document.getElementById('Result_Screen').value == 'ERROR'):
+    case (+(secondNumber)==0):
       break;
 
     case (firstNumber == '' && secondNumber == '' && document.getElementById('Result_Screen').value != 'ERROR'): //If that permits to negate the result of a operation to continue calculating
@@ -320,34 +321,37 @@ function unableButtons(buttons) {
 
 
 function disableButtons() {
+
   const allButtons = document.querySelectorAll('button');
   unableButtons(allButtons);
 
-  switch (true) {
-    case ((numberCount(secondNumber)) >= 10):
-      allButtons.forEach(element => {
-        if (element.classList.contains('numButton')) {
-          element.classList.add("disable");
-        }
-      });
-      break;
 
-    case (document.getElementById('Result_Screen').value == 'ERROR' || firstNumber == 'ERROR'):
-      allButtons.forEach(element => {
+  if ((numberCount(secondNumber)) >= 10) {
+    allButtons.forEach(element => {
+      if (element.classList.contains('numButton')) {
         element.classList.add("disable");
-      });
-      document.getElementById('C').classList.remove("disable");
-      break;
-
-    case ['0', '0.', '', ','].includes(secondNumber):
-      (document.getElementById('negPos')).classList.add("disable");
-      if (secondNumber != '0.') { (document.getElementById('b0')).classList.add("disable"); }
-      break;
-
+      }
+    });
   }
 
 
-}
+  if (document.getElementById('Result_Screen').value == 'ERROR' || firstNumber == 'ERROR') {
+    allButtons.forEach(element => {
+      element.classList.add("disable");
+    });
+    document.getElementById('C').classList.remove("disable");
+  }
+
+
+  if (['0', '0.', ''].includes(secondNumber)) {
+    (document.getElementById('negPos')).classList.add("disable");
+    if(!secondNumber.includes('.')) {(document.getElementById('b0')).classList.add("disable");}
+  }
+
+  if (secondNumber.includes('.')) { (document.getElementById('bComma')).classList.add("disable"); }
+  
+  }
+
 
 
 function RevealDecimals(x) {
