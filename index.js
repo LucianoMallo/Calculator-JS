@@ -2,9 +2,6 @@ let firstNumber = '';
 let secondNumber = '';
 let sign = '';
 
-
-
-
 function addNumber(number) {
 
   switch (true) {
@@ -351,8 +348,6 @@ function disableButtons() {
   if (secondNumber.includes('.')) { (document.getElementById('bComma')).classList.add("disable"); }
   
   }
-
-
 
 function RevealDecimals(x) {
   if (Math.abs(x) < 1.0) {
