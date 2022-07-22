@@ -47,6 +47,7 @@ function addComma() {
       secondNumber += '.';
       break;
   }
+  disableButtons();
 
   if (document.getElementById('Result_Screen').value != 'ERROR') {
 
@@ -55,39 +56,34 @@ function addComma() {
 }
 
 function negate() {
-    switch (true) {
+
+  switch (true) {
 
     case (document.getElementById('Result_Screen').value == 'ERROR'):
-      
       break;
 
     case (firstNumber == '' && secondNumber == '' && document.getElementById('Result_Screen').value != 'ERROR'): //If that permits to negate the result of a operation to continue calculating
-      
+
       if (document.getElementById('Result_Screen').value != '') {
         secondNumber = document.getElementById('Result_Screen').value.replace(",", ".");
         negate();
       }
-      else { blockCeroAndNegButton(); }
       break;
 
     case (['0', '0.', '', ','].includes(secondNumber)):
-      
-      blockCeroAndNegButton();
       break;
 
     case (secondNumber.charAt(secondNumber.length - 1) == '.'):
-    
-      unlockButtons();
       secondNumber = String(secondNumber * (-1));
       secondNumber += '.'
       break;
 
     default:
-      unlockButtons();
       secondNumber = String(secondNumber * (-1));
       break;
 
   }
+  disableButtons();
 
   if (document.getElementById('Result_Screen').value != 'ERROR') {
 
@@ -114,11 +110,11 @@ function eraseValue() {
 
 
   removeHighlight();
-  unlockButtons();
   firstNumber = '';
   secondNumber = '';
   sign = '';
   displayCounter(firstNumber);
+  disableButtons()
 }
 
 function displayCounter(x) {
@@ -186,7 +182,7 @@ function equal() {
       break;
 
   }
-
+  disableButtons();
 
 }
 
@@ -225,7 +221,7 @@ function operation(sign) {
 
   firstNumber = RevealDecimals(firstNumber);
   check(firstNumber);
-  console.log(firstNumber);
+  disableButtons();
 }
 
 function check(number) {
@@ -242,11 +238,11 @@ function check(number) {
 
     case (numberCount(number) > 10):
       if (number.includes('.')) {
-         do {
+        do {
 
           number = number.slice(0, -1);
 
-        }while (numberCount(number) > 10 && number.includes('.'))
+        } while (numberCount(number) > 10 && number.includes('.'))
         firstNumber = number;
       }
 
@@ -316,55 +312,16 @@ window.addEventListener("keydown", function (event) {
 
 }, true);
 
-
-/*function blockAllButtonsExceptC() {
-  unlockButtons();
-  const buttons = document.querySelectorAll('button');
-  buttons.forEach(element => {
-
-    if (!element.classList.contains("cButton")) {
-      element.classList.add("blockButtons");
-    }
-
-  });
-
-}
-
-function blockCeroAndNegButton() {
-  if (document.getElementById("Result_Screen").value != 'ERROR' && document.getElementById("Result_Screen").value != '') {
-    unlockButtons();
-  }
-
-  let negPosbutton = document.getElementById('negPos');
-  if (!negPosbutton.classList.contains("cButton")) {
-    negPosbutton.classList.add("blockButtons");
-  }
-  let CeroButton = document.getElementById('b0');
-  if (!CeroButton.classList.contains("cButton")) {
-    CeroButton.classList.add("blockButtons");
-  }
-}
-
-function blockAllNumbersButtons() {
-
-  unlockButtons();
-  const buttons = document.getElementsByClassName('numButton');
-  Array.from(buttons).forEach(element => {
-    element.classList.add("blockButtons");
-  });
-}*/
-
-
 function unableButtons(buttons) {
-  buttons.forEach(element => {element.classList.remove("disable");
+  buttons.forEach((element) => {
+    element.classList.remove("disable");
   });
 }
 
 
 function disableButtons() {
   const allButtons = document.querySelectorAll('button');
-
-    unableButtons(allButtons);
+  unableButtons(allButtons);
 
   switch (true) {
     case ((numberCount(secondNumber)) >= 10):
@@ -375,7 +332,7 @@ function disableButtons() {
       });
       break;
 
-    case (document.getElementById('Result_Screen').value == 'ERROR'||firstNumber=='ERROR'):
+    case (document.getElementById('Result_Screen').value == 'ERROR' || firstNumber == 'ERROR'):
       allButtons.forEach(element => {
         element.classList.add("disable");
       });
@@ -392,15 +349,6 @@ function disableButtons() {
 
 }
 
-
-function unlockButtons() {
-
-  let changeClass = document.querySelectorAll('button');
-  for (let i = 0; i < changeClass.length; i++) {
-    changeClass[i].classList.remove('blockButtons')
-  }
-
-}
 
 function RevealDecimals(x) {
   if (Math.abs(x) < 1.0) {
@@ -421,4 +369,4 @@ function RevealDecimals(x) {
 }
 
 
-window.onload = function(){disableButtons();};
+window.onload = function () { disableButtons(); };
