@@ -53,17 +53,13 @@ function addComma() {
 }
 
 function negate() {
-console.log(10);
   switch (true) {
 
     case (document.getElementById('Result_Screen').value == 'ERROR'):
     case (+(secondNumber)==0 && firstNumber!=0):
-
-      console.log(30);
       break;
 
     case (firstNumber == '' && secondNumber == '' && document.getElementById('Result_Screen').value != 'ERROR'): //If that permits to negate the result of a operation to continue calculating
-    console.log(20);
       if (document.getElementById('Result_Screen').value != '') {
         secondNumber = document.getElementById('Result_Screen').value.replace(",", ".");
         negate();
@@ -71,14 +67,12 @@ console.log(10);
       break;
 
     case (['0', '0.', '', ','].includes(secondNumber))&&firstNumber!='':
-      console.log(40);
       firstNumber = String(firstNumber * (-1));
       break;
 
     case (secondNumber.charAt(secondNumber.length - 1) == '.'):
       secondNumber = String(secondNumber * (-1));
       secondNumber += '.';
-      console.log(50);
       break;
 
     default:
