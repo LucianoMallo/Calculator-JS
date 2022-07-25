@@ -4,23 +4,17 @@ let sign = '';
 const MAX_DIGITS_IN_THE_DISPLAY = 10;
 
 function addNumber(number) {
-  switch (true) {
-    //case (firstNumber == 'ERROR'):
-    case getDisplay() == 'ERROR':
-    case digitNumberCount(secondNumber) >= MAX_DIGITS_IN_THE_DISPLAY:
-      break;
+     if (getDisplay() != 'ERROR' && digitNumberCount(secondNumber) < MAX_DIGITS_IN_THE_DISPLAY){
 
-    case secondNumber == '':
-    case secondNumber == '0':
+    if (secondNumber == '' || secondNumber == '0'){
       secondNumber = number;
-      break;
-
-    default:
+      setDisplay(secondNumber);
+    }
+  
+    else {
       secondNumber += number;
-      break;
-  }
-  if (getDisplay() != 'ERROR') {
-    setDisplay(secondNumber);
+      setDisplay(secondNumber);
+    }
   }
   disableButtons();
 }
