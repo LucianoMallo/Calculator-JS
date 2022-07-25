@@ -3,12 +3,13 @@ let secondNumber = '';
 let sign = '';
 
 function addNumber(number) {
+  console.log();
 
   switch (true) {
 
     case (firstNumber == 'ERROR'):
-    case (document.getElementById('Result_Screen').value == 'ERROR'):
-    case (numberCount(secondNumber) >= 10):
+    case (getDisplay() == 'ERROR'):
+    case (digitNumber(secondNumber) >= 10):
       break;
 
     case (secondNumber == ''):
@@ -21,9 +22,9 @@ function addNumber(number) {
       break;
 
   }
-  if (document.getElementById('Result_Screen').value != 'ERROR') {
+  if (getDisplay() != 'ERROR') {
 
-    displayCounter(secondNumber);
+    setDisplay(secondNumber);
   }
   disableButtons();
 }
@@ -34,7 +35,7 @@ function addComma() {
 
     case secondNumber == 'ERROR':
     case (secondNumber.includes('.')):
-    case (numberCount(secondNumber) >= 10):
+    case (digitNumber(secondNumber) >= 10):
       break;
 
     case (secondNumber == ''):
@@ -46,22 +47,22 @@ function addComma() {
   }
   disableButtons();
 
-  if (document.getElementById('Result_Screen').value != 'ERROR') {
+  if (getDisplay() != 'ERROR') {
 
-    displayCounter(secondNumber);
+    setDisplay(secondNumber);
   }
 }
 
 function negate() {
   switch (true) {
 
-    case (document.getElementById('Result_Screen').value == 'ERROR'):
+    case (getDisplay() == 'ERROR'):
     case (+(secondNumber)==0 && firstNumber!=0):
       break;
 
-    case (firstNumber == '' && secondNumber == '' && document.getElementById('Result_Screen').value != 'ERROR'): //If that permits to negate the result of a operation to continue calculating
-      if (document.getElementById('Result_Screen').value != '') {
-        secondNumber = document.getElementById('Result_Screen').value.replace(",", ".");
+    case (firstNumber == '' && secondNumber == '' && getDisplay() != 'ERROR'): //If that permits to negate the result of a operation to continue calculating
+      if (getDisplay() != '') {
+        secondNumber = getDisplay().replace(",", ".");
         negate();
       }
       break;
@@ -82,9 +83,9 @@ function negate() {
   }
   disableButtons();
 
-  if (document.getElementById('Result_Screen').value != 'ERROR') {
+  if (getDisplay() != 'ERROR') {
 
-    displayCounter(secondNumber);
+    setDisplay(secondNumber);
   }
 
 }
@@ -110,11 +111,11 @@ function eraseValue() {
   firstNumber = '';
   secondNumber = '';
   sign = '';
-  displayCounter(firstNumber);
+  setDisplay(firstNumber);
   disableButtons()
 }
 
-function displayCounter(x) {
+function setDisplay(x) {
 
   document.getElementById('Result_Screen').value = x.replace(".", ",");
 
@@ -131,7 +132,7 @@ function setSign(x) {
 
     case (firstNumber == '' && secondNumber == ''):
       sign = x;
-      firstNumber = String(document.getElementById('Result_Screen').value.replace(',', '.'));
+      firstNumber = String(getDisplay().replace(',', '.'));
       if (firstNumber == '') {
         firstNumber = '0';
       }
@@ -144,7 +145,7 @@ function setSign(x) {
 
     case (firstNumber != '' && secondNumber != ''):
       operation(sign);
-      displayCounter(firstNumber);
+      setDisplay(firstNumber);
       sign = x;
       secondNumber = '';
       break;
@@ -172,7 +173,7 @@ function equal() {
 
     case (firstNumber != 'ERROR' && sign != ''):
       operation(sign);
-      displayCounter(firstNumber);
+      setDisplay(firstNumber);
       firstNumber = '';
       secondNumber = '';
       sign = '';
@@ -216,12 +217,12 @@ function operation(sign) {
 
   }
 
-  firstNumber = RevealDecimals(firstNumber);
-  check(firstNumber);
+  firstNumber = exponentialToDecimal(firstNumber);
+  checkResult(firstNumber);
   disableButtons();
 }
 
-function check(number) {
+function checkResult(number) {
 
 
   switch (true) {
@@ -233,17 +234,17 @@ function check(number) {
       break;
 
 
-    case (numberCount(number) > 10):
+    case (digitNumber(number) > 10):
       if (number.includes('.')) {
         do {
 
           number = number.slice(0, -1);
 
-        } while (numberCount(number) > 10 && number.includes('.'))
+        } while (digitNumber(number) > 10 && number.includes('.'))
         firstNumber = number;
       }
 
-      if (numberCount(number) > 10) {
+      if (digitNumber(number) > 10) {
         firstNumber = 'ERROR'
         secondNumber = '';
         disableButtons();
@@ -261,7 +262,7 @@ function check(number) {
 
 }
 
-function numberCount(numbers) {
+function digitNumber(numbers) {
   return numbers.replace(/[^0-9]/g, '').length;
 }
 
@@ -322,7 +323,7 @@ function disableButtons() {
   unableButtons(allButtons);
 
 
-  if ((numberCount(secondNumber)) >= 10) {
+  if ((digitNumber(secondNumber)) >= 10) {
     allButtons.forEach(element => {
       if (element.classList.contains('numButton')) {
         element.classList.add("disable");
@@ -331,7 +332,7 @@ function disableButtons() {
   }
 
 
-  if (document.getElementById('Result_Screen').value == 'ERROR' || firstNumber == 'ERROR') {
+  if (getDisplay() == 'ERROR' || firstNumber == 'ERROR') {
     allButtons.forEach(element => {
       element.classList.add("disable");
     });
@@ -348,7 +349,7 @@ function disableButtons() {
   
   }
 
-function RevealDecimals(x) {
+function exponentialToDecimal(x) {
   if (Math.abs(x) < 1.0) {
     var e = parseInt(x.toString().split('e-')[1]);
     if (e) {
@@ -364,6 +365,11 @@ function RevealDecimals(x) {
     }
   }
   return x;
+}
+
+
+function getDisplay(){
+  return document.getElementById('Result_Screen').value;
 }
 
 
