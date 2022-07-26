@@ -3,6 +3,26 @@ let currentOperandTextElement = "";
 let sign = "";
 const MAX_DIGITS_IN_THE_DISPLAY = 10;
 
+window.onload = function () {
+  disableButtons();
+};
+
+function getDisplay() {
+  return document.getElementById("Result_Screen").value;
+}
+
+function setDisplay(x) {
+  document.getElementById("Result_Screen").value = x.replace(".", ",");
+}
+
+function removeZerosFromRight(number) {
+  return +number;
+}
+
+function digitNumberCount(numbers) {
+  return numbers.replace(/[^0-9]/g, "").length;
+}
+
 function addNumber(number) {
   if (
     getDisplay() != "ERROR" &&
@@ -36,10 +56,6 @@ function addComma() {
   }
 
   disableButtons();
-}
-
-function removeZerosFromRight(number) {
-  return +number;
 }
 
 function addNegate() {
@@ -96,10 +112,6 @@ function eraseValue() {
   sign = "";
   setDisplay(previousOperandTextElement);
   disableButtons();
-}
-
-function setDisplay(x) {
-  document.getElementById("Result_Screen").value = x.replace(".", ",");
 }
 
 function setSign(x) {
@@ -232,10 +244,6 @@ function checkResult(number) {
   }
 }
 
-function digitNumberCount(numbers) {
-  return numbers.replace(/[^0-9]/g, "").length;
-}
-
 window.addEventListener(
   "keydown",
   function (event) {
@@ -352,11 +360,3 @@ function exponentialToDecimal(x) {
   }
   return x;
 }
-
-function getDisplay() {
-  return document.getElementById("Result_Screen").value;
-}
-
-window.onload = function () {
-  disableButtons();
-};
