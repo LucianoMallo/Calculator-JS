@@ -1,19 +1,19 @@
-let firstNumber = ""; previousOperandTextElement
-let secondNumber = "";
+let previousOperandTextElement = "";
+let currentOperandTextElement = "";
 let sign = "";
 const MAX_DIGITS_IN_THE_DISPLAY = 10;
 
 function addNumber(number) {
   if (
     getDisplay() != "ERROR" &&
-    digitNumberCount(secondNumber) < MAX_DIGITS_IN_THE_DISPLAY
+    digitNumberCount(currentOperandTextElement) < MAX_DIGITS_IN_THE_DISPLAY
   ) {
-    if (secondNumber == "" || secondNumber == "0") {
-      secondNumber = number;
-      setDisplay(secondNumber);
+    if (currentOperandTextElement == "" || currentOperandTextElement == "0") {
+      currentOperandTextElement = number;
+      setDisplay(currentOperandTextElement);
     } else {
-      secondNumber += number;
-      setDisplay(secondNumber);
+      currentOperandTextElement += number;
+      setDisplay(currentOperandTextElement);
     }
   }
   disableButtons();
@@ -21,17 +21,17 @@ function addNumber(number) {
 
 function addComma() {
   if (
-    secondNumber != "ERROR" ||
-    !secondNumber.includes(".") ||
-    digitNumberCount(secondNumber) < MAX_DIGITS_IN_THE_DISPLAY
+    currentOperandTextElement != "ERROR" ||
+    !currentOperandTextElement.includes(".") ||
+    digitNumberCount(currentOperandTextElement) < MAX_DIGITS_IN_THE_DISPLAY
   ) {
-    if (secondNumber == "") {
-      secondNumber = "0";
+    if (currentOperandTextElement == "") {
+      currentOperandTextElement = "0";
       addComma();
-      setDisplay(secondNumber);
+      setDisplay(currentOperandTextElement);
     } else {
-      secondNumber += ".";
-      setDisplay(secondNumber);
+      currentOperandTextElement += ".";
+      setDisplay(currentOperandTextElement);
     }
   }
 
@@ -45,33 +45,39 @@ function removeZerosFromRight(number) {
 function addNegate() {
   switch (true) {
     case getDisplay() == "ERROR":
-    case removeZerosFromRight(secondNumber) == 0 && firstNumber != 0:
+    case removeZerosFromRight(currentOperandTextElement) == 0 &&
+      previousOperandTextElement != 0:
       break;
 
-    case firstNumber == "" && secondNumber == "" && getDisplay() != "ERROR": //If that permits to negate the result of a operation to continue calculating
+    case previousOperandTextElement == "" &&
+      currentOperandTextElement == "" &&
+      getDisplay() != "ERROR": //If that permits to negate the result of a operation to continue calculating
       if (getDisplay() != "") {
-        secondNumber = getDisplay().replace(",", ".");
+        currentOperandTextElement = getDisplay().replace(",", ".");
         addNegate();
       }
       break;
 
-    case ["0", "0.", "", ","].includes(secondNumber) && firstNumber != "":
-      firstNumber = String(firstNumber * -1);
+    case ["0", "0.", "", ","].includes(currentOperandTextElement) &&
+      previousOperandTextElement != "":
+      previousOperandTextElement = String(previousOperandTextElement * -1);
       break;
 
-    case secondNumber.charAt(secondNumber.length - 1) == ".":
-      secondNumber = String(secondNumber * -1);
-      secondNumber += ".";
+    case currentOperandTextElement.charAt(
+      currentOperandTextElement.length - 1
+    ) == ".":
+      currentOperandTextElement = String(currentOperandTextElement * -1);
+      currentOperandTextElement += ".";
       break;
 
     default:
-      secondNumber = String(secondNumber * -1);
+      currentOperandTextElement = String(currentOperandTextElement * -1);
       break;
   }
   disableButtons();
 
   if (getDisplay() != "ERROR") {
-    setDisplay(secondNumber);
+    setDisplay(currentOperandTextElement);
   }
 }
 
@@ -89,10 +95,10 @@ function removeHighlight() {
 
 function eraseValue() {
   removeHighlight();
-  firstNumber = "";
-  secondNumber = "";
+  previousOperandTextElement = "";
+  currentOperandTextElement = "";
   sign = "";
-  setDisplay(firstNumber);
+  setDisplay(previousOperandTextElement);
   disableButtons();
 }
 
@@ -102,33 +108,33 @@ function setDisplay(x) {
 
 function setSign(x) {
   switch (true) {
-    case firstNumber == "ERROR":
+    case previousOperandTextElement == "ERROR":
       break;
 
-    case firstNumber == "" && secondNumber == "":
+    case previousOperandTextElement == "" && currentOperandTextElement == "":
       sign = x;
-      firstNumber = String(getDisplay().replace(",", "."));
-      if (firstNumber == "") {
-        firstNumber = "0";
+      previousOperandTextElement = String(getDisplay().replace(",", "."));
+      if (previousOperandTextElement == "") {
+        previousOperandTextElement = "0";
       }
       break;
 
-    case firstNumber != "" && secondNumber == "":
+    case previousOperandTextElement != "" && currentOperandTextElement == "":
       sign = x;
-      secondNumber = "";
+      currentOperandTextElement = "";
       break;
 
-    case firstNumber != "" && secondNumber != "":
+    case previousOperandTextElement != "" && currentOperandTextElement != "":
       makeAnOperation(sign);
-      setDisplay(firstNumber);
+      setDisplay(previousOperandTextElement);
       sign = x;
-      secondNumber = "";
+      currentOperandTextElement = "";
       break;
 
-    case firstNumber == "" && secondNumber != "":
+    case previousOperandTextElement == "" && currentOperandTextElement != "":
       makeAnOperation(sign);
-      firstNumber = secondNumber;
-      secondNumber = "";
+      previousOperandTextElement = currentOperandTextElement;
+      currentOperandTextElement = "";
       sign = x;
       break;
   }
@@ -139,11 +145,11 @@ function setSign(x) {
 function equal() {
   removeHighlight();
 
-  if (firstNumber != "ERROR" && sign != "") {
+  if (previousOperandTextElement != "ERROR" && sign != "") {
     makeAnOperation(sign);
-    setDisplay(firstNumber);
-    firstNumber = "";
-    secondNumber = "";
+    setDisplay(previousOperandTextElement);
+    previousOperandTextElement = "";
+    currentOperandTextElement = "";
     sign = "";
   }
   disableButtons();
@@ -152,34 +158,46 @@ function equal() {
 function makeAnOperation(sign) {
   switch (sign) {
     case "+":
-      firstNumber = removeZerosFromRight(
-        (parseFloat(firstNumber) + parseFloat(secondNumber)).toFixed(10)
+      previousOperandTextElement = removeZerosFromRight(
+        (
+          parseFloat(previousOperandTextElement) +
+          parseFloat(currentOperandTextElement)
+        ).toFixed(10)
       );
-      firstNumber = String(firstNumber);
+      previousOperandTextElement = String(previousOperandTextElement);
 
       break;
 
     case "-":
-      firstNumber = removeZerosFromRight(
-        (parseFloat(firstNumber) - parseFloat(secondNumber)).toFixed(10)
+      previousOperandTextElement = removeZerosFromRight(
+        (
+          parseFloat(previousOperandTextElement) -
+          parseFloat(currentOperandTextElement)
+        ).toFixed(10)
       );
-      firstNumber = String(firstNumber);
+      previousOperandTextElement = String(previousOperandTextElement);
 
       break;
 
     case "*":
-      firstNumber = removeZerosFromRight(
-        (parseFloat(firstNumber) * parseFloat(secondNumber)).toFixed(9)
+      previousOperandTextElement = removeZerosFromRight(
+        (
+          parseFloat(previousOperandTextElement) *
+          parseFloat(currentOperandTextElement)
+        ).toFixed(9)
       );
-      firstNumber = String(firstNumber);
+      previousOperandTextElement = String(previousOperandTextElement);
 
       break;
 
     case "/":
-      firstNumber = removeZerosFromRight(
-        (parseFloat(firstNumber) / parseFloat(secondNumber)).toFixed(9)
+      previousOperandTextElement = removeZerosFromRight(
+        (
+          parseFloat(previousOperandTextElement) /
+          parseFloat(currentOperandTextElement)
+        ).toFixed(9)
       );
-      firstNumber = String(firstNumber);
+      previousOperandTextElement = String(previousOperandTextElement);
 
       break;
 
@@ -187,8 +205,8 @@ function makeAnOperation(sign) {
       break;
   }
 
-  firstNumber = exponentialToDecimal(firstNumber);
-  checkResult(firstNumber);
+  previousOperandTextElement = exponentialToDecimal(previousOperandTextElement);
+  checkResult(previousOperandTextElement);
   disableButtons();
 }
 
@@ -198,8 +216,8 @@ function checkResult(number) {
       number == "-Infinity" ||
       number == "NaN" ||
       number == "undefined":
-      firstNumber = "ERROR";
-      secondNumber = "";
+      previousOperandTextElement = "ERROR";
+      currentOperandTextElement = "";
       disableButtons();
       break;
 
@@ -211,12 +229,12 @@ function checkResult(number) {
           digitNumberCount(number) > MAX_DIGITS_IN_THE_DISPLAY &&
           number.includes(".")
         );
-        firstNumber = number;
+        previousOperandTextElement = number;
       }
 
       if (digitNumberCount(number) > MAX_DIGITS_IN_THE_DISPLAY) {
-        firstNumber = "ERROR";
-        secondNumber = "";
+        previousOperandTextElement = "ERROR";
+        currentOperandTextElement = "";
         disableButtons();
         break;
       }
@@ -232,7 +250,6 @@ function digitNumberCount(numbers) {
 }
 
 window.addEventListener(
-  ///hacer un swicth the name y itenerar sobre los caracteres.
   "keydown",
   function (event) {
     const name = event.key;
@@ -300,7 +317,9 @@ function disableButtons() {
   const allButtons = document.querySelectorAll("button");
   unableButtons(allButtons);
 
-  if (digitNumberCount(secondNumber) >= MAX_DIGITS_IN_THE_DISPLAY) {
+  if (
+    digitNumberCount(currentOperandTextElement) >= MAX_DIGITS_IN_THE_DISPLAY
+  ) {
     allButtons.forEach((element) => {
       if (element.classList.contains("numButton")) {
         element.classList.add("disable");
@@ -308,23 +327,23 @@ function disableButtons() {
     });
   }
 
-  if (getDisplay() == "ERROR" || firstNumber == "ERROR") {
+  if (getDisplay() == "ERROR" || previousOperandTextElement == "ERROR") {
     allButtons.forEach((element) => {
       element.classList.add("disable");
     });
     document.getElementById("C").classList.remove("disable");
   }
 
-  if (["0", "0.", ""].includes(secondNumber)) {
-    if (firstNumber != "") {
+  if (["0", "0.", ""].includes(currentOperandTextElement)) {
+    if (previousOperandTextElement != "") {
       document.getElementById("negPos").classList.add("disable");
     }
-    if (!secondNumber.includes(".")) {
+    if (!currentOperandTextElement.includes(".")) {
       document.getElementById("b0").classList.add("disable");
     }
   }
 
-  if (secondNumber.includes(".")) {
+  if (currentOperandTextElement.includes(".")) {
     document.getElementById("bComma").classList.add("disable");
   }
 }
