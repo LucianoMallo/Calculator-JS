@@ -1,17 +1,17 @@
-let firstNumber = '';
-let secondNumber = '';
-let sign = '';
+let firstNumber = ""; previousOperandTextElement
+let secondNumber = "";
+let sign = "";
 const MAX_DIGITS_IN_THE_DISPLAY = 10;
 
 function addNumber(number) {
-     if (getDisplay() != 'ERROR' && digitNumberCount(secondNumber) < MAX_DIGITS_IN_THE_DISPLAY){
-
-    if (secondNumber == '' || secondNumber == '0'){
+  if (
+    getDisplay() != "ERROR" &&
+    digitNumberCount(secondNumber) < MAX_DIGITS_IN_THE_DISPLAY
+  ) {
+    if (secondNumber == "" || secondNumber == "0") {
       secondNumber = number;
       setDisplay(secondNumber);
-    }
-  
-    else {
+    } else {
       secondNumber += number;
       setDisplay(secondNumber);
     }
@@ -20,24 +20,22 @@ function addNumber(number) {
 }
 
 function addComma() {
-  switch (true) {
-    case secondNumber == 'ERROR':
-    case secondNumber.includes('.'):
-    case digitNumberCount(secondNumber) >= MAX_DIGITS_IN_THE_DISPLAY:
-      break;
-
-    case secondNumber == '':
-      secondNumber = '0';
-
-    default:
-      secondNumber += '.';
-      break;
+  if (
+    secondNumber != "ERROR" ||
+    !secondNumber.includes(".") ||
+    digitNumberCount(secondNumber) < MAX_DIGITS_IN_THE_DISPLAY
+  ) {
+    if (secondNumber == "") {
+      secondNumber = "0";
+      addComma();
+      setDisplay(secondNumber);
+    } else {
+      secondNumber += ".";
+      setDisplay(secondNumber);
+    }
   }
+
   disableButtons();
-
-  if (getDisplay() != 'ERROR') {
-    setDisplay(secondNumber);
-  }
 }
 
 function removeZerosFromRight(number) {
@@ -46,24 +44,24 @@ function removeZerosFromRight(number) {
 
 function addNegate() {
   switch (true) {
-    case getDisplay() == 'ERROR':
+    case getDisplay() == "ERROR":
     case removeZerosFromRight(secondNumber) == 0 && firstNumber != 0:
       break;
 
-    case firstNumber == '' && secondNumber == '' && getDisplay() != 'ERROR': //If that permits to negate the result of a operation to continue calculating
-      if (getDisplay() != '') {
-        secondNumber = getDisplay().replace(',', '.');
+    case firstNumber == "" && secondNumber == "" && getDisplay() != "ERROR": //If that permits to negate the result of a operation to continue calculating
+      if (getDisplay() != "") {
+        secondNumber = getDisplay().replace(",", ".");
         addNegate();
       }
       break;
 
-    case ['0', '0.', '', ','].includes(secondNumber) && firstNumber != '':
+    case ["0", "0.", "", ","].includes(secondNumber) && firstNumber != "":
       firstNumber = String(firstNumber * -1);
       break;
 
-    case secondNumber.charAt(secondNumber.length - 1) == '.':
+    case secondNumber.charAt(secondNumber.length - 1) == ".":
       secondNumber = String(secondNumber * -1);
-      secondNumber += '.';
+      secondNumber += ".";
       break;
 
     default:
@@ -72,65 +70,65 @@ function addNegate() {
   }
   disableButtons();
 
-  if (getDisplay() != 'ERROR') {
+  if (getDisplay() != "ERROR") {
     setDisplay(secondNumber);
   }
 }
 
 function setHighlight(x) {
   removeHighlight();
-  x.classList.add('operatorHighlighted');
+  x.classList.add("operatorHighlighted");
 }
 
 function removeHighlight() {
-  let changeClass = document.getElementsByClassName('operationButton');
+  let changeClass = document.getElementsByClassName("operationButton");
   for (let i = 0; i < changeClass.length; i++) {
-    changeClass[i].classList.remove('operatorHighlighted');
+    changeClass[i].classList.remove("operatorHighlighted");
   }
 }
 
 function eraseValue() {
   removeHighlight();
-  firstNumber = '';
-  secondNumber = '';
-  sign = '';
+  firstNumber = "";
+  secondNumber = "";
+  sign = "";
   setDisplay(firstNumber);
   disableButtons();
 }
 
 function setDisplay(x) {
-  document.getElementById('Result_Screen').value = x.replace('.', ',');
+  document.getElementById("Result_Screen").value = x.replace(".", ",");
 }
 
 function setSign(x) {
   switch (true) {
-    case firstNumber == 'ERROR':
+    case firstNumber == "ERROR":
       break;
 
-    case firstNumber == '' && secondNumber == '':
+    case firstNumber == "" && secondNumber == "":
       sign = x;
-      firstNumber = String(getDisplay().replace(',', '.'));
-      if (firstNumber == '') {
-        firstNumber = '0';
+      firstNumber = String(getDisplay().replace(",", "."));
+      if (firstNumber == "") {
+        firstNumber = "0";
       }
       break;
 
-    case firstNumber != '' && secondNumber == '':
+    case firstNumber != "" && secondNumber == "":
       sign = x;
-      secondNumber = '';
+      secondNumber = "";
       break;
 
-    case firstNumber != '' && secondNumber != '':
+    case firstNumber != "" && secondNumber != "":
       makeAnOperation(sign);
       setDisplay(firstNumber);
       sign = x;
-      secondNumber = '';
+      secondNumber = "";
       break;
 
-    case firstNumber == '' && secondNumber != '':
+    case firstNumber == "" && secondNumber != "":
       makeAnOperation(sign);
       firstNumber = secondNumber;
-      secondNumber = '';
+      secondNumber = "";
       sign = x;
       break;
   }
@@ -141,24 +139,19 @@ function setSign(x) {
 function equal() {
   removeHighlight();
 
-  switch (true) {
-    case firstNumber != 'ERROR' && sign == '':
-      break;
-
-    case firstNumber != 'ERROR' && sign != '':
-      makeAnOperation(sign);
-      setDisplay(firstNumber);
-      firstNumber = '';
-      secondNumber = '';
-      sign = '';
-      break;
+  if (firstNumber != "ERROR" && sign != "") {
+    makeAnOperation(sign);
+    setDisplay(firstNumber);
+    firstNumber = "";
+    secondNumber = "";
+    sign = "";
   }
   disableButtons();
 }
 
 function makeAnOperation(sign) {
   switch (sign) {
-    case '+':
+    case "+":
       firstNumber = removeZerosFromRight(
         (parseFloat(firstNumber) + parseFloat(secondNumber)).toFixed(10)
       );
@@ -166,7 +159,7 @@ function makeAnOperation(sign) {
 
       break;
 
-    case '-':
+    case "-":
       firstNumber = removeZerosFromRight(
         (parseFloat(firstNumber) - parseFloat(secondNumber)).toFixed(10)
       );
@@ -174,7 +167,7 @@ function makeAnOperation(sign) {
 
       break;
 
-    case '*':
+    case "*":
       firstNumber = removeZerosFromRight(
         (parseFloat(firstNumber) * parseFloat(secondNumber)).toFixed(9)
       );
@@ -182,7 +175,7 @@ function makeAnOperation(sign) {
 
       break;
 
-    case '/':
+    case "/":
       firstNumber = removeZerosFromRight(
         (parseFloat(firstNumber) / parseFloat(secondNumber)).toFixed(9)
       );
@@ -201,26 +194,29 @@ function makeAnOperation(sign) {
 
 function checkResult(number) {
   switch (true) {
-    case number == 'Infinity' ||
-      number == '-Infinity' ||
-      number == 'NaN' ||
-      number == 'undefined':
-      firstNumber = 'ERROR';
-      secondNumber = '';
+    case number == "Infinity" ||
+      number == "-Infinity" ||
+      number == "NaN" ||
+      number == "undefined":
+      firstNumber = "ERROR";
+      secondNumber = "";
       disableButtons();
       break;
 
     case digitNumberCount(number) > MAX_DIGITS_IN_THE_DISPLAY:
-      if (number.includes('.')) {
+      if (number.includes(".")) {
         do {
           number = number.slice(0, -1);
-        } while (digitNumberCount(number) > MAX_DIGITS_IN_THE_DISPLAY && number.includes('.'));
+        } while (
+          digitNumberCount(number) > MAX_DIGITS_IN_THE_DISPLAY &&
+          number.includes(".")
+        );
         firstNumber = number;
       }
 
       if (digitNumberCount(number) > MAX_DIGITS_IN_THE_DISPLAY) {
-        firstNumber = 'ERROR';
-        secondNumber = '';
+        firstNumber = "ERROR";
+        secondNumber = "";
         disableButtons();
         break;
       }
@@ -232,19 +228,23 @@ function checkResult(number) {
 }
 
 function digitNumberCount(numbers) {
-  return numbers.replace(/[^0-9]/g, '').length;
+  return numbers.replace(/[^0-9]/g, "").length;
 }
 
 window.addEventListener(
-  'keydown',
+  ///hacer un swicth the name y itenerar sobre los caracteres.
+  "keydown",
   function (event) {
     const name = event.key;
 
     event.preventDefault();
 
-    switch (true) {
-      case ['+', '-', '/', '*'].includes(name):
-        document.querySelectorAll('button').forEach((i) => {
+    switch (name) {
+      case "+":
+      case "-":
+      case "/":
+      case "*":
+        document.querySelectorAll("button").forEach((i) => {
           if (i.value == name) {
             setHighlight(i);
           }
@@ -252,23 +252,33 @@ window.addEventListener(
         setSign(name);
         break;
 
-      case ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].includes(name):
+      case "1":
+      case "2":
+      case "3":
+      case "4":
+      case "5":
+      case "6":
+      case "7":
+      case "8":
+      case "9":
+      case "0":
         addNumber(name);
         break;
 
-      case ['Enter'].includes(name):
+      case "Enter":
         equal();
         break;
 
-      case ['Escape'].includes(name):
+      case "Escape":
         eraseValue();
         break;
 
-      case [',', '.'].includes(name):
+      case ",":
+      case ".":
         addComma();
         break;
 
-      case ['Control'].includes(name):
+      case "Control":
         addNegate();
         break;
         123;
@@ -282,63 +292,63 @@ window.addEventListener(
 
 function unableButtons(buttons) {
   buttons.forEach((element) => {
-    element.classList.remove('disable');
+    element.classList.remove("disable");
   });
 }
 
 function disableButtons() {
-  const allButtons = document.querySelectorAll('button');
+  const allButtons = document.querySelectorAll("button");
   unableButtons(allButtons);
 
   if (digitNumberCount(secondNumber) >= MAX_DIGITS_IN_THE_DISPLAY) {
     allButtons.forEach((element) => {
-      if (element.classList.contains('numButton')) {
-        element.classList.add('disable');
+      if (element.classList.contains("numButton")) {
+        element.classList.add("disable");
       }
     });
   }
 
-  if (getDisplay() == 'ERROR' || firstNumber == 'ERROR') {
+  if (getDisplay() == "ERROR" || firstNumber == "ERROR") {
     allButtons.forEach((element) => {
-      element.classList.add('disable');
+      element.classList.add("disable");
     });
-    document.getElementById('C').classList.remove('disable');
+    document.getElementById("C").classList.remove("disable");
   }
 
-  if (['0', '0.', ''].includes(secondNumber)) {
-    if (firstNumber != '') {
-      document.getElementById('negPos').classList.add('disable');
+  if (["0", "0.", ""].includes(secondNumber)) {
+    if (firstNumber != "") {
+      document.getElementById("negPos").classList.add("disable");
     }
-    if (!secondNumber.includes('.')) {
-      document.getElementById('b0').classList.add('disable');
+    if (!secondNumber.includes(".")) {
+      document.getElementById("b0").classList.add("disable");
     }
   }
 
-  if (secondNumber.includes('.')) {
-    document.getElementById('bComma').classList.add('disable');
+  if (secondNumber.includes(".")) {
+    document.getElementById("bComma").classList.add("disable");
   }
 }
 
 function exponentialToDecimal(x) {
   if (Math.abs(x) < 1.0) {
-    var e = parseInt(x.toString().split('e-')[1]);
+    var e = parseInt(x.toString().split("e-")[1]);
     if (e) {
       x *= Math.pow(10, e - 1);
-      x = '0.' + new Array(e).join('0') + x.toString().substring(2);
+      x = "0." + new Array(e).join("0") + x.toString().substring(2);
     }
   } else {
-    var e = parseInt(x.toString().split('+')[1]);
+    var e = parseInt(x.toString().split("+")[1]);
     if (e > 20) {
       e -= 20;
       x /= Math.pow(10, e);
-      x += new Array(e + 1).join('0');
+      x += new Array(e + 1).join("0");
     }
   }
   return x;
 }
 
 function getDisplay() {
-  return document.getElementById('Result_Screen').value;
+  return document.getElementById("Result_Screen").value;
 }
 
 window.onload = function () {
