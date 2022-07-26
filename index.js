@@ -21,8 +21,8 @@ function addNumber(number) {
 
 function addComma() {
   if (
-    currentOperandTextElement != "ERROR" ||
-    !currentOperandTextElement.includes(".") ||
+    getDisplay() != "ERROR" &&
+    !currentOperandTextElement.includes(".") &&
     digitNumberCount(currentOperandTextElement) < MAX_DIGITS_IN_THE_DISPLAY
   ) {
     if (currentOperandTextElement == "") {
@@ -43,42 +43,38 @@ function removeZerosFromRight(number) {
 }
 
 function addNegate() {
-  switch (true) {
-    case getDisplay() == "ERROR":
-    case removeZerosFromRight(currentOperandTextElement) == 0 &&
-      previousOperandTextElement != 0:
-      break;
-
-    case previousOperandTextElement == "" &&
-      currentOperandTextElement == "" &&
-      getDisplay() != "ERROR": //If that permits to negate the result of a operation to continue calculating
+  if (
+    getDisplay() != "ERROR" &&
+    removeZerosFromRight(getDisplay().replace(",", ".")) != 0
+  ) {
+    if (previousOperandTextElement == "" && currentOperandTextElement == "") {
       if (getDisplay() != "") {
         currentOperandTextElement = getDisplay().replace(",", ".");
-        addNegate();
       }
-      break;
+    }
 
-    case ["0", "0.", "", ","].includes(currentOperandTextElement) &&
-      previousOperandTextElement != "":
+    if (
+      ["0", "0.", "", ","].includes(currentOperandTextElement) &&
+      previousOperandTextElement != ""
+    ) {
       previousOperandTextElement = String(previousOperandTextElement * -1);
-      break;
+      setDisplay(currentOperandTextElement);
+    }
 
-    case currentOperandTextElement.charAt(
-      currentOperandTextElement.length - 1
-    ) == ".":
+    if (
+      currentOperandTextElement.charAt(currentOperandTextElement.length - 1) ==
+      "."
+    ) {
       currentOperandTextElement = String(currentOperandTextElement * -1);
       currentOperandTextElement += ".";
-      break;
-
-    default:
+      setDisplay(currentOperandTextElement);
+    } else if (currentOperandTextElement != "" && getDisplay() != "") {
       currentOperandTextElement = String(currentOperandTextElement * -1);
-      break;
+      setDisplay(currentOperandTextElement);
+    }
   }
-  disableButtons();
 
-  if (getDisplay() != "ERROR") {
-    setDisplay(currentOperandTextElement);
-  }
+  disableButtons();
 }
 
 function setHighlight(x) {
@@ -107,36 +103,31 @@ function setDisplay(x) {
 }
 
 function setSign(x) {
-  switch (true) {
-    case previousOperandTextElement == "ERROR":
-      break;
+  if (previousOperandTextElement == "" && currentOperandTextElement == "") {
+    sign = x;
+    previousOperandTextElement = String(getDisplay().replace(",", "."));
+    if (previousOperandTextElement == "") {
+      previousOperandTextElement = "0";
+    }
+  }
 
-    case previousOperandTextElement == "" && currentOperandTextElement == "":
-      sign = x;
-      previousOperandTextElement = String(getDisplay().replace(",", "."));
-      if (previousOperandTextElement == "") {
-        previousOperandTextElement = "0";
-      }
-      break;
+  if (previousOperandTextElement != "" && currentOperandTextElement == "") {
+    sign = x;
+    currentOperandTextElement = "";
+  }
 
-    case previousOperandTextElement != "" && currentOperandTextElement == "":
-      sign = x;
-      currentOperandTextElement = "";
-      break;
+  if (previousOperandTextElement != "" && currentOperandTextElement != "") {
+    makeAnOperation(sign);
+    setDisplay(previousOperandTextElement);
+    sign = x;
+    currentOperandTextElement = "";
+  }
 
-    case previousOperandTextElement != "" && currentOperandTextElement != "":
-      makeAnOperation(sign);
-      setDisplay(previousOperandTextElement);
-      sign = x;
-      currentOperandTextElement = "";
-      break;
-
-    case previousOperandTextElement == "" && currentOperandTextElement != "":
-      makeAnOperation(sign);
-      previousOperandTextElement = currentOperandTextElement;
-      currentOperandTextElement = "";
-      sign = x;
-      break;
+  if (previousOperandTextElement == "" && currentOperandTextElement != "") {
+    makeAnOperation(sign);
+    previousOperandTextElement = currentOperandTextElement;
+    currentOperandTextElement = "";
+    sign = x;
   }
 
   disableButtons();
@@ -211,37 +202,33 @@ function makeAnOperation(sign) {
 }
 
 function checkResult(number) {
-  switch (true) {
-    case number == "Infinity" ||
-      number == "-Infinity" ||
-      number == "NaN" ||
-      number == "undefined":
-      previousOperandTextElement = "ERROR";
-      currentOperandTextElement = "";
-      disableButtons();
-      break;
+  if (
+    number == "Infinity" ||
+    number == "-Infinity" ||
+    number == "NaN" ||
+    number == "undefined"
+  ) {
+    previousOperandTextElement = "ERROR";
+    currentOperandTextElement = "";
+    disableButtons();
+  }
 
-    case digitNumberCount(number) > MAX_DIGITS_IN_THE_DISPLAY:
-      if (number.includes(".")) {
-        do {
-          number = number.slice(0, -1);
-        } while (
-          digitNumberCount(number) > MAX_DIGITS_IN_THE_DISPLAY &&
-          number.includes(".")
-        );
-        previousOperandTextElement = number;
-      }
+  if (digitNumberCount(number) > MAX_DIGITS_IN_THE_DISPLAY) {
+    if (number.includes(".")) {
+      do {
+        number = number.slice(0, -1);
+      } while (
+        digitNumberCount(number) > MAX_DIGITS_IN_THE_DISPLAY &&
+        number.includes(".")
+      );
+      previousOperandTextElement = number;
+    }
+  }
 
-      if (digitNumberCount(number) > MAX_DIGITS_IN_THE_DISPLAY) {
-        previousOperandTextElement = "ERROR";
-        currentOperandTextElement = "";
-        disableButtons();
-        break;
-      }
-      break;
-
-    default:
-      break;
+  if (digitNumberCount(number) > MAX_DIGITS_IN_THE_DISPLAY) {
+    previousOperandTextElement = "ERROR";
+    currentOperandTextElement = "";
+    disableButtons();
   }
 }
 
@@ -327,15 +314,15 @@ function disableButtons() {
     });
   }
 
-  if (getDisplay() == "ERROR" || previousOperandTextElement == "ERROR") {
+  if (getDisplay() == "ERROR") {
     allButtons.forEach((element) => {
       element.classList.add("disable");
     });
     document.getElementById("C").classList.remove("disable");
   }
 
-  if (["0", "0.", ""].includes(currentOperandTextElement)) {
-    if (previousOperandTextElement != "") {
+  if (removeZerosFromRight(getDisplay().replace(",", ".")) == 0) {
+    if (previousOperandTextElement == "") {
       document.getElementById("negPos").classList.add("disable");
     }
     if (!currentOperandTextElement.includes(".")) {
