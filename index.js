@@ -1,22 +1,22 @@
+const MAX_DIGITS_IN_THE_DISPLAY = 10;
 let previousOperandTextElement = "";
 let currentOperandTextElement = "";
-let sign = "";
-const MAX_DIGITS_IN_THE_DISPLAY = 10;
+let operator = "";
 
 window.onload = function () {
-  disableButtons();
+  setButtonsStatus();
 };
 
 function getDisplay() {
-  return document.getElementById("Result_Screen").value;
+  return document.getElementById("Result_Screen").value.replace(",", ".");
 }
 
 function setDisplay(x) {
   document.getElementById("Result_Screen").value = x.replace(".", ",");
 }
 
-function removeZerosFromRight(number) {
-  return +number;
+function stringToNumber(str) {
+  return +str;
 }
 
 function digitNumberCount(numbers) {
@@ -36,7 +36,7 @@ function addNumber(number) {
       setDisplay(currentOperandTextElement);
     }
   }
-  disableButtons();
+  setButtonsStatus();
 }
 
 function addComma() {
@@ -55,22 +55,21 @@ function addComma() {
     }
   }
 
-  disableButtons();
+  setButtonsStatus();
 }
 
 function addNegate() {
-  if (
-    getDisplay() != "ERROR" &&
-    removeZerosFromRight(getDisplay().replace(",", ".")) != 0
-  ) {
+  console.log(previousOperandTextElement);
+
+  if (getDisplay() != "ERROR" && stringToNumber(getDisplay()) != 0) {
     if (previousOperandTextElement == "" && currentOperandTextElement == "") {
       if (getDisplay() != "") {
-        currentOperandTextElement = getDisplay().replace(",", ".");
+        currentOperandTextElement = getDisplay();
       }
     }
 
     if (
-      ["0", "0.", "", ","].includes(currentOperandTextElement) &&
+      ["0", "0.", "", ","].includes(getDisplay()) &&
       previousOperandTextElement != ""
     ) {
       previousOperandTextElement = String(previousOperandTextElement * -1);
@@ -90,15 +89,17 @@ function addNegate() {
     }
   }
 
-  disableButtons();
+  setButtonsStatus();
 }
 
-function setHighlight(x) {
-  removeHighlight();
+function setButtonEnabled(x) {}
+
+function setButtonHighlight(x) {
+  removeButtonHighlight();
   x.classList.add("operatorHighlighted");
 }
 
-function removeHighlight() {
+function removeButtonHighlight() {
   let changeClass = document.getElementsByClassName("operationButton");
   for (let i = 0; i < changeClass.length; i++) {
     changeClass[i].classList.remove("operatorHighlighted");
@@ -106,62 +107,62 @@ function removeHighlight() {
 }
 
 function eraseValue() {
-  removeHighlight();
+  removeButtonHighlight();
   previousOperandTextElement = "";
   currentOperandTextElement = "";
-  sign = "";
+  operator = "";
   setDisplay(previousOperandTextElement);
-  disableButtons();
+  setButtonsStatus();
 }
 
-function setSign(x) {
+function setOperator(OperatorStrg) {
   if (previousOperandTextElement == "" && currentOperandTextElement == "") {
-    sign = x;
-    previousOperandTextElement = String(getDisplay().replace(",", "."));
+    operator = OperatorStrg;
+    previousOperandTextElement = String(getDisplay());
     if (previousOperandTextElement == "") {
       previousOperandTextElement = "0";
     }
   }
 
   if (previousOperandTextElement != "" && currentOperandTextElement == "") {
-    sign = x;
+    operator = OperatorStrg;
     currentOperandTextElement = "";
   }
 
   if (previousOperandTextElement != "" && currentOperandTextElement != "") {
-    makeAnOperation(sign);
+    makeAnOperation(operator);
     setDisplay(previousOperandTextElement);
-    sign = x;
+    operator = OperatorStrg;
     currentOperandTextElement = "";
   }
 
   if (previousOperandTextElement == "" && currentOperandTextElement != "") {
-    makeAnOperation(sign);
+    makeAnOperation(operator);
     previousOperandTextElement = currentOperandTextElement;
     currentOperandTextElement = "";
-    sign = x;
+    operator = OperatorStrg;
   }
 
-  disableButtons();
+  setButtonsStatus();
 }
 
 function equal() {
-  removeHighlight();
+  removeButtonHighlight();
 
-  if (previousOperandTextElement != "ERROR" && sign != "") {
-    makeAnOperation(sign);
+  if (getDisplay != "ERROR" && operator != "") {
+    makeAnOperation(operator);
     setDisplay(previousOperandTextElement);
     previousOperandTextElement = "";
     currentOperandTextElement = "";
-    sign = "";
+    operator = "";
   }
-  disableButtons();
+  setButtonsStatus();
 }
 
-function makeAnOperation(sign) {
-  switch (sign) {
+function makeAnOperation(operator) {
+  switch (operator) {
     case "+":
-      previousOperandTextElement = removeZerosFromRight(
+      previousOperandTextElement = stringToNumber(
         (
           parseFloat(previousOperandTextElement) +
           parseFloat(currentOperandTextElement)
@@ -172,7 +173,7 @@ function makeAnOperation(sign) {
       break;
 
     case "-":
-      previousOperandTextElement = removeZerosFromRight(
+      previousOperandTextElement = stringToNumber(
         (
           parseFloat(previousOperandTextElement) -
           parseFloat(currentOperandTextElement)
@@ -183,7 +184,7 @@ function makeAnOperation(sign) {
       break;
 
     case "*":
-      previousOperandTextElement = removeZerosFromRight(
+      previousOperandTextElement = stringToNumber(
         (
           parseFloat(previousOperandTextElement) *
           parseFloat(currentOperandTextElement)
@@ -194,7 +195,7 @@ function makeAnOperation(sign) {
       break;
 
     case "/":
-      previousOperandTextElement = removeZerosFromRight(
+      previousOperandTextElement = stringToNumber(
         (
           parseFloat(previousOperandTextElement) /
           parseFloat(currentOperandTextElement)
@@ -210,7 +211,7 @@ function makeAnOperation(sign) {
 
   previousOperandTextElement = exponentialToDecimal(previousOperandTextElement);
   checkResult(previousOperandTextElement);
-  disableButtons();
+  setButtonsStatus();
 }
 
 function checkResult(number) {
@@ -222,7 +223,7 @@ function checkResult(number) {
   ) {
     previousOperandTextElement = "ERROR";
     currentOperandTextElement = "";
-    disableButtons();
+    setButtonsStatus();
   }
 
   if (digitNumberCount(number) > MAX_DIGITS_IN_THE_DISPLAY) {
@@ -240,7 +241,7 @@ function checkResult(number) {
   if (digitNumberCount(number) > MAX_DIGITS_IN_THE_DISPLAY) {
     previousOperandTextElement = "ERROR";
     currentOperandTextElement = "";
-    disableButtons();
+    setButtonsStatus();
   }
 }
 
@@ -256,12 +257,8 @@ window.addEventListener(
       case "-":
       case "/":
       case "*":
-        document.querySelectorAll("button").forEach((i) => {
-          if (i.value == name) {
-            setHighlight(i);
-          }
-        });
-        setSign(name);
+        setHighlight(name);
+        setOperator(name);
         break;
 
       case "1":
@@ -302,44 +299,47 @@ window.addEventListener(
   true
 );
 
-function unableButtons(buttons) {
-  buttons.forEach((element) => {
-    element.classList.remove("disable");
+function enableButtons() {
+  const allButtons = document.querySelectorAll("button");
+  allButtons.forEach((button) => {
+    button.classList.remove("disable");
   });
 }
 
-function disableButtons() {
-  const allButtons = document.querySelectorAll("button");
-  unableButtons(allButtons);
-
-  if (
-    digitNumberCount(currentOperandTextElement) >= MAX_DIGITS_IN_THE_DISPLAY
-  ) {
-    allButtons.forEach((element) => {
-      if (element.classList.contains("numButton")) {
-        element.classList.add("disable");
-      }
-    });
-  }
+function setButtonsStatus() {
+  enableButtons();
 
   if (getDisplay() == "ERROR") {
-    allButtons.forEach((element) => {
-      element.classList.add("disable");
+    document.querySelectorAll("button").forEach((button) => {
+      button.classList.add("disable");
     });
     document.getElementById("C").classList.remove("disable");
-  }
+  } else {
+    if (
+      digitNumberCount(currentOperandTextElement) >= MAX_DIGITS_IN_THE_DISPLAY
+    ) {
+      console.log(document.querySelectorAll(".numButton"));
 
-  if (removeZerosFromRight(getDisplay().replace(",", ".")) == 0) {
-    if (previousOperandTextElement == "") {
-      document.getElementById("negPos").classList.add("disable");
-    }
-    if (!currentOperandTextElement.includes(".")) {
-      document.getElementById("b0").classList.add("disable");
-    }
-  }
+      document.querySelectorAll(".numButton").forEach((button) => {
+        button.classList.add("disable");
+      });
+    } else {
+      if (
+        ["0", "0.", "", ","].includes(getDisplay()) &&
+        previousOperandTextElement == ""
+      ) {
+        {
+          document.getElementById("negPos").classList.add("disable");
+        }
+        if (!currentOperandTextElement.includes(".")) {
+          document.getElementById("b0").classList.add("disable");
+        }
+      }
 
-  if (currentOperandTextElement.includes(".")) {
-    document.getElementById("bComma").classList.add("disable");
+      if (currentOperandTextElement.includes(".")) {
+        document.getElementById("bComma").classList.add("disable");
+      }
+    }
   }
 }
 

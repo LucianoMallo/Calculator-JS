@@ -29,10 +29,10 @@
         <button id="b7" onclick="addNumber('7')" class="numButton">7</button>
         <button id="b8" onclick="addNumber('8')" class="numButton">8</button>
         <button id="b9"  onclick="addNumber('9')" class="numButton">9</button>
-        <button id="bDiv" value="/" onclick="setHighlight(this),setSign(this.value)" class="operationButton">/</button>
-        <button id="bPlus" value="+" onclick="setHighlight(this),setSign(this.value)" class="operationButton">+</button>
-        <button id="bMulti" value="*" onclick="setHighlight(this),setSign(this.value)" class="operationButton">x</button>
-        <button  id="bSub" value="-" onclick="setHighlight(this),setSign(this.value)" class="operationButton">-</button>
+        <button id="bDiv" value="/" onclick="setButtonHighlight(this),setOperator(this.value)" class="operationButton">/</button>
+        <button id="bPlus" value="+" onclick="setButtonHighlight(this),setOperator(this.value)" class="operationButton">+</button>
+        <button id="bMulti" value="*" onclick="setButtonHighlight(this),setOperator(this.value)" class="operationButton">x</button>
+        <button  id="bSub" value="-" onclick="setButtonHighlight(this),setOperator(this.value)" class="operationButton">-</button>
         <button id="bComma" onclick="addComma()" class="numButton">,</button>
         <button id="bEq" value="=" onclick="equal()" class="operationButton">=</button>
 
