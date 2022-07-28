@@ -11,8 +11,8 @@ function getDisplay() {
   return document.getElementById("Result_Screen").value.replace(",", ".");
 }
 
-function setDisplay(x) {
-  document.getElementById("Result_Screen").value = x.replace(".", ",");
+function setDisplay(number) {
+  document.getElementById("Result_Screen").value = number.replace(".", ",");
 }
 
 function stringToNumber(str) {
@@ -92,10 +92,10 @@ function addNegate() {
 
 function setButtonEnabled(x) {}
 
-function setButtonHighlight(x) {
-  console.log(x);
+function setButtonHighlight(button) {
+  console.log(button);
   removeButtonHighlight();
-  x.classList.add("operatorHighlighted");
+  button.classList.add("operatorHighlighted");
 }
 
 function removeButtonHighlight() {
@@ -257,7 +257,8 @@ window.addEventListener(
       case "-":
       case "/":
       case "*":
-        document.querySelectorAll("button").forEach((i) => {
+        //This must to be done because the keyboard it's not related with the buttons
+        document.querySelectorAll("button,.operationButton").forEach((i) => {
           if (i.value == name) {
             setButtonHighlight(i);
           }
