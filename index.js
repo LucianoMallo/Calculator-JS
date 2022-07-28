@@ -68,7 +68,8 @@ function addNegate() {
 
     if (
       stringToNumber(currentOperandTextElement) == 0 &&
-      previousOperandTextElement != "" && operator==''
+      previousOperandTextElement != "" &&
+      operator == ""
     ) {
       previousOperandTextElement = String(previousOperandTextElement * -1);
       setDisplay(previousOperandTextElement);
@@ -169,9 +170,7 @@ function makeAnOperation(operator) {
         ).toFixed(10)
       );
       previousOperandTextElement = String(previousOperandTextElement);
-
       break;
-
     case "-":
       previousOperandTextElement = stringToNumber(
         (
@@ -180,9 +179,7 @@ function makeAnOperation(operator) {
         ).toFixed(10)
       );
       previousOperandTextElement = String(previousOperandTextElement);
-
       break;
-
     case "*":
       previousOperandTextElement = stringToNumber(
         (
@@ -191,9 +188,7 @@ function makeAnOperation(operator) {
         ).toFixed(9)
       );
       previousOperandTextElement = String(previousOperandTextElement);
-
       break;
-
     case "/":
       previousOperandTextElement = stringToNumber(
         (
@@ -202,13 +197,10 @@ function makeAnOperation(operator) {
         ).toFixed(9)
       );
       previousOperandTextElement = String(previousOperandTextElement);
-
       break;
-
     default:
       break;
   }
-
   previousOperandTextElement = exponentialToDecimal(previousOperandTextElement);
   checkResult(previousOperandTextElement);
   setButtonsStatus();
@@ -225,7 +217,6 @@ function checkResult(number) {
     currentOperandTextElement = "";
     setButtonsStatus();
   }
-
   if (digitNumberCount(number) > MAX_DIGITS_IN_THE_DISPLAY) {
     if (number.includes(".")) {
       do {
@@ -249,9 +240,7 @@ window.addEventListener(
   "keydown",
   function (event) {
     const name = event.key;
-
     event.preventDefault();
-
     switch (name) {
       case "+":
       case "-":
@@ -265,7 +254,6 @@ window.addEventListener(
         });
         setOperator(name);
         break;
-
       case "1":
       case "2":
       case "3":
@@ -278,7 +266,6 @@ window.addEventListener(
       case "0":
         addNumber(name);
         break;
-
       case "Enter":
         equal();
         break;
@@ -286,17 +273,14 @@ window.addEventListener(
       case "Escape":
         eraseValue();
         break;
-
       case ",":
       case ".":
         addComma();
         break;
-
       case "Control":
         addNegate();
         break;
         123;
-
       default:
         return;
     }
@@ -313,7 +297,6 @@ function enableButtons() {
 
 function setButtonsStatus() {
   enableButtons();
-
   if (getDisplay() == "ERROR") {
     document.querySelectorAll("button").forEach((button) => {
       button.classList.add("disable");
@@ -338,7 +321,6 @@ function setButtonsStatus() {
           document.getElementById("b0").classList.add("disable");
         }
       }
-
       if (currentOperandTextElement.includes(".")) {
         document.getElementById("bComma").classList.add("disable");
       }
@@ -366,8 +348,11 @@ function exponentialToDecimal(x) {
 
 function disableNegPosButton() {
   return (
-    (stringToNumber(currentOperandTextElement) == 0 &&operator == "" && stringToNumber(previousOperandTextElement) == 0) 
-    ||
-    (operator != "" &&stringToNumber(previousOperandTextElement) != 0 &&stringToNumber(currentOperandTextElement) == 0)
+    (stringToNumber(currentOperandTextElement) == 0 &&
+      operator == "" &&
+      stringToNumber(previousOperandTextElement) == 0) ||
+    (operator != "" &&
+      stringToNumber(previousOperandTextElement) != 0 &&
+      stringToNumber(currentOperandTextElement) == 0)
   );
 }
