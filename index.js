@@ -59,8 +59,6 @@ function addComma() {
 }
 
 function addNegate() {
-  console.log(previousOperandTextElement);
-
   if (getDisplay() != "ERROR" && stringToNumber(getDisplay()) != 0) {
     if (previousOperandTextElement == "" && currentOperandTextElement == "") {
       if (getDisplay() != "") {
@@ -69,11 +67,11 @@ function addNegate() {
     }
 
     if (
-      ["0", "0.", "", ","].includes(getDisplay()) &&
-      previousOperandTextElement != ""
+      stringToNumber(currentOperandTextElement) == 0 &&
+      previousOperandTextElement != "" && operator==''
     ) {
       previousOperandTextElement = String(previousOperandTextElement * -1);
-      setDisplay(currentOperandTextElement);
+      setDisplay(previousOperandTextElement);
     }
 
     if (
@@ -95,12 +93,15 @@ function addNegate() {
 function setButtonEnabled(x) {}
 
 function setButtonHighlight(x) {
+  console.log(x);
   removeButtonHighlight();
   x.classList.add("operatorHighlighted");
 }
 
 function removeButtonHighlight() {
-  let changeClass = document.getElementsByClassName("operationButton");
+  let changeClass = document.querySelectorAll(
+    "Calculator_Body,.operationButton"
+  );
   for (let i = 0; i < changeClass.length; i++) {
     changeClass[i].classList.remove("operatorHighlighted");
   }
@@ -137,10 +138,9 @@ function setOperator(OperatorStrg) {
   }
 
   if (previousOperandTextElement == "" && currentOperandTextElement != "") {
-    makeAnOperation(operator);
+    operator = OperatorStrg;
     previousOperandTextElement = currentOperandTextElement;
     currentOperandTextElement = "";
-    operator = OperatorStrg;
   }
 
   setButtonsStatus();
@@ -152,7 +152,7 @@ function equal() {
   if (getDisplay != "ERROR" && operator != "") {
     makeAnOperation(operator);
     setDisplay(previousOperandTextElement);
-    previousOperandTextElement = "";
+    //previousOperandTextElement = "";
     currentOperandTextElement = "";
     operator = "";
   }
@@ -257,7 +257,11 @@ window.addEventListener(
       case "-":
       case "/":
       case "*":
-        setHighlight(name);
+        document.querySelectorAll("button").forEach((i) => {
+          if (i.value == name) {
+            setButtonHighlight(i);
+          }
+        });
         setOperator(name);
         break;
 
@@ -300,7 +304,7 @@ window.addEventListener(
 );
 
 function enableButtons() {
-  const allButtons = document.querySelectorAll("button");
+  const allButtons = document.querySelectorAll("Calculator_Body,button");
   allButtons.forEach((button) => {
     button.classList.remove("disable");
   });
@@ -318,20 +322,18 @@ function setButtonsStatus() {
     if (
       digitNumberCount(currentOperandTextElement) >= MAX_DIGITS_IN_THE_DISPLAY
     ) {
-      console.log(document.querySelectorAll(".numButton"));
-
       document.querySelectorAll(".numButton").forEach((button) => {
         button.classList.add("disable");
       });
     } else {
-      if (
-        ["0", "0.", "", ","].includes(getDisplay()) &&
-        previousOperandTextElement == ""
-      ) {
+      if (disableNegPosButton()) {
         {
           document.getElementById("negPos").classList.add("disable");
         }
-        if (!currentOperandTextElement.includes(".")) {
+        if (
+          !currentOperandTextElement.includes(".") &&
+          previousOperandTextElement == ""
+        ) {
           document.getElementById("b0").classList.add("disable");
         }
       }
@@ -359,4 +361,12 @@ function exponentialToDecimal(x) {
     }
   }
   return x;
+}
+
+function disableNegPosButton() {
+  return (
+    (stringToNumber(currentOperandTextElement) == 0 &&operator == "" && stringToNumber(previousOperandTextElement) == 0) 
+    ||
+    (operator != "" &&stringToNumber(previousOperandTextElement) != 0 &&stringToNumber(currentOperandTextElement) == 0)
+  );
 }
