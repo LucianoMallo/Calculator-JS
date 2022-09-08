@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Calculator on HTML</title>
+    <link type="text/css" rel="stylesheet" href="Style.css">
+    <script src="index.js"></script>
+</head>
+
+<body>
+
+
+
+    <div class="Calculator_Body">
+
+        <h1 id="Title">Calculator on HTML</h1>
+        <input  type="text" id="Result_Screen" placeholder="0" value="0" data-testid="display">
+
+        <button id="C" value="" onclick="eraseValue(this.value)" class="cButton" data-testid="C">C</button>
+        <button id="negPos" value="-" onclick="addNegate(this.value)" class="negButton" data-testid="+-">+/-</button>
+
+        <button id="b0" value="0" onclick="addNumber('0')" class="numButton" data-testid="0" >0</button>
+        <button id="b1" value="1" onclick="addNumber('1')" class="numButton" data-testid="1" >1</button>
+        <button id="b2" value="2" onclick="addNumber('2')" class="numButton" data-testid="2" >2</button>
+        <button id="b3" value="3" onclick="addNumber('3')" class="numButton" data-testid="3" >3</button>
+        <button id="b4" value="4" onclick="addNumber('4')" class="numButton" data-testid="4" >4</button>
+        <button id="b5" value="5" onclick="addNumber('5')" class="numButton" data-testid="5" >5</button>
+        <button id="b6" value="6" onclick="addNumber('6')" class="numButton" data-testid="6" >6</button>
+        <button id="b7" value="7" onclick="addNumber('7')" class="numButton" data-testid="7" >7</button>
+        <button id="b8" value="8" onclick="addNumber('8')" class="numButton" data-testid="8" >8</button>
+        <button id="b9" value="9" onclick="addNumber('9')" class="numButton" data-testid="9" >9</button>
+        <button id="bDiv" value="/" onclick="setButtonHighlight(this),setOperator(this.value)" class="operationButton" data-testid="/">/</button>
+        <button id="bPlus" value="+" onclick="setButtonHighlight(this),setOperator(this.value)" class="operationButton" data-testid="+">+</button>
+        <button id="bMulti" value="*" onclick="setButtonHighlight(this),setOperator(this.value)" class="operationButton" data-testid="*">x</button>
+        <button  id="bSub" value="-" onclick="setButtonHighlight(this),setOperator(this.value)" class="operationButton" data-testid="-">-</button>
+        <button id="bComma" onclick="addComma()" class="numButton" data-testid=",">,</button>
+        <button id="bEq" value="=" onclick="equal()" class="operationButton" data-testid="=">=</button>
+
+    </div>
+
+</body>
+
+</html>
